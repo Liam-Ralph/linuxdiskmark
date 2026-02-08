@@ -21,7 +21,6 @@ import tkinter
 import tkinter.filedialog
 from tkinter import colorchooser
 from tkinter import messagebox
-from tkinter import ttk
 
 from PIL import Image, ImageTk
 
@@ -109,7 +108,7 @@ def open_window_home():
 
     # Window Setup
 
-    window_width = 520
+    window_width = 480
     window_height = 320
 
     window_home = tkinter.Tk()
@@ -155,6 +154,19 @@ def open_window_home():
 
     window_home.update()
 
+    # Header Frame
+
+    file_var = tkinter.StringVar(value = "File")
+    file_options = ["Copy", "Save Text", "Save Image", "Exit"]
+    tkinter.OptionMenu(
+        frame_header,
+        file_var,
+        *file_options,
+        command = lambda event: run_header_command(file_var.get())
+    ).pack(
+        side = tkinter.LEFT
+    )
+
     # Footer Frame
 
     tkinter.Text(
@@ -173,6 +185,19 @@ def open_window_home():
     # Window Mainloop
 
     window_home.mainloop()
+
+def run_header_command(command):
+
+    match command:
+
+        case "Copy":
+
+            clipboard_tk = tkinter.Tk()
+            clipboard_tk.withdraw()
+            clipboard_tk.clipboard_clear()
+            clipboard_tk.clipboard_append("Temp")
+            clipboard_tk.update()
+            clipboard_tk.destroy()
 
 
 # Main Function
