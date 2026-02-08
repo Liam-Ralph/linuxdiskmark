@@ -46,6 +46,19 @@ PATH_DOC = "/usr/share/doc/linuxdiskmark"
 
 # Functions
 
+def check_exit_flag():
+    """
+    Check whether the exit flag is active. If the exit flag is active, the
+    program will exit (user closed home window). If the exit flag is inactive,
+    the windows are being reloaded (e.g. after settings change) and the program
+    does not exit.
+    """
+
+    global exit_flag
+
+    if exit_flag:
+        sys.exit()
+
 def open_window_home():
     """
     Open home/main window.
@@ -64,7 +77,7 @@ def open_window_home():
 
     global background
     global foreground
-    global text_color
+    global highlight
     global bg_image
     global font
 
@@ -92,10 +105,15 @@ def open_window_home():
 
     global exit_flag
 
+    exit_flag = True
+
     # Window Setup
 
+    window_width = 520
+    window_height = 320
+
     window_home = tkinter.Tk()
-    window_home.geometry("800x600")
+    window_home.geometry(f"{window_width}x{window_height}")
     window_home.resizable(width = False, height = False)
     window_home.configure(bg = background)
     window_home.title("LinuxDiskMark " + version)
@@ -105,6 +123,56 @@ def open_window_home():
         ImageTk.PhotoImage(Image.open(PATH_LOGO))
     )
     window_home.update()
+
+    # Home Screen
+
+    frame_header = tkinter.Frame(
+        window_home,
+        width = window_width,
+        height = 25,
+        bg = background
+    )
+    frame_header.pack_propagate(False)
+    frame_header.pack()
+
+    frame_main = tkinter.Frame(
+        window_home,
+        width = window_width,
+        height = window_height - 60,
+        bg = background
+    )
+    frame_main.pack_propagate(False)
+    frame_main.pack()
+
+    frame_footer = tkinter.Frame(
+        window_home,
+        width = window_width,
+        height = 35,
+        bg = background
+    )
+    frame_footer.pack_propagate(False)
+    frame_footer.pack()
+
+    window_home.update()
+
+    # Footer Frame
+
+    tkinter.Text(
+        frame_footer,
+        height = 1,
+        font = (font, 10),
+        bg = background,
+        fg = foreground
+    ).pack(
+        padx = 5,
+        pady = 5
+    )
+
+    window_home.update()
+
+    # Window Mainloop
+
+    window_home.mainloop()
 
 
 # Main Function
@@ -123,7 +191,7 @@ def main():
 
     global background
     global foreground
-    global text_color
+    global highlight
     global bg_image
     global font
 
@@ -152,6 +220,7 @@ def main():
         ] + sys.argv
         os.execvp("pkexec", command)
 
+
     # Info and Settings Reading
 
     with open(PATH_DATA + "/info.txt", "r") as file:
@@ -165,7 +234,7 @@ def main():
         settings_raw = file.read().split("\n")
     background = settings_raw[0].replace("background: ", "")
     foreground = settings_raw[1].replace("foreground: ", "")
-    text_color = settings_raw[2].replace("text-color: ", "")
+    highlight = settings_raw[2].replace("highlight: ", "")
     bg_image = settings_raw[3].replace("bg_image: ", "")
     font = settings_raw[4].replace("font: ", "")
 

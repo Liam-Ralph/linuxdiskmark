@@ -1,5 +1,5 @@
 background: #FFFFFF
-foreground: #00AA00
-text-color: #000000
+foreground: #000000
+highlight: #00AA00
 bg-image: None
 font: DejaVu Sans
