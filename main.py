@@ -23,6 +23,8 @@ from tkinter import colorchooser
 from tkinter import messagebox
 from tkinter import ttk
 
+from PIL import Image, ImageTk
+
 # System
 
 import os
@@ -44,16 +46,65 @@ PATH_DOC = "/usr/share/doc/linuxdiskmark"
 
 # Functions
 
-def open_window_home(window_dimensions = [800, 600], settings_dimensions = None):
+def open_window_home():
     """
-    Open home/main window. Non-default settings are used when the windows are
-    reloaded after a settings change.
+    Open home/main window.
+    """
 
-    :param window_dimensions: The dimensions to open the home window at.
-    Defaults to 800 by 600.
-    :param settings_dimensions: The dimensions to open the settings window at.
-    Defaults to None, in which case the settings window will not be opened.
-    """
+    # Home Window Variable
+
+    global window_home
+
+    # Info and Settings Variables
+
+    global names
+    global created
+    global version
+    global updated
+
+    global background
+    global foreground
+    global text_color
+    global bg_image
+    global font
+
+    # Global Buttons
+
+    global button_all
+    global button_1
+    global button_2
+    global button_3
+    global button_4
+
+    # Graphs
+
+    global graph_r1
+    global graph_r2
+    global graph_r3
+    global graph_r4
+
+    global graph_w1
+    global graph_w2
+    global graph_w3
+    global graph_w4
+
+    # Exit Flag
+
+    global exit_flag
+
+    # Window Setup
+
+    window_home = tkinter.Tk()
+    window_home.geometry("800x600")
+    window_home.resizable(width = False, height = False)
+    window_home.configure(bg = background)
+    window_home.title("LinuxDiskMark " + version)
+    window_home.protocol("WM_DELETE_WINDOW", check_exit_flag)
+    window_home.iconphoto(
+        True,
+        ImageTk.PhotoImage(Image.open(PATH_LOGO))
+    )
+    window_home.update()
 
 
 # Main Function
