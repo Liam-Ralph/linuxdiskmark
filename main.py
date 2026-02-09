@@ -80,6 +80,10 @@ def open_window_home():
     global bg_image
     global font
 
+    # Header Variables
+
+    global header_var
+
     # Global Buttons
 
     global button_all
@@ -156,13 +160,14 @@ def open_window_home():
 
     # Header Frame
 
-    file_var = tkinter.StringVar(value = "File")
+    header_var = tkinter.StringVar(value = "File")
+
     file_options = ["Copy", "Save Text", "Save Image", "Exit"]
     tkinter.OptionMenu(
         frame_header,
-        file_var,
+        header_var,
         *file_options,
-        command = lambda event: run_header_command(file_var.get())
+        command = run_header_command
     ).pack(
         side = tkinter.LEFT
     )
@@ -186,9 +191,39 @@ def open_window_home():
 
     window_home.mainloop()
 
-def run_header_command(command):
+def run_header_command():
+
+    command = header_var.get()
+
+    # Header Variables
+
+    global header_var
+
+    headers = ["File", "Settings", "Profile", "Theme", "Help", "Language"]
+    dropdown_lists = [ # fix this at some point
+        ["Copy", "Save Text", "Save Image", "Exit"],
+        ["Test Data", "Default", "NVMe SSD", "Flash Memory", "Settings"],
+        [
+            "Default", "Peak Performance", "Real World Performance", "Demo",
+            "Default [+Mix]", "Peak Performance [+Mix]", "Real World Performance [+Mix]"
+        ],
+        ["Read&Write [+Mix]", "Read [+Mix]", "Write [+Mix]"],
+        [
+            "Zoom", "Font Setting", "Random", "Dark", "DarkRed", "Default", "Digital8", "Flower",
+            "Green", "LegendOfGreen", "LegendOfOrange"
+        ],
+        ["Select Language"]
+    ]
+
+    for i in range(len(dropdown_lists)):
+        if command in dropdown_lists[i]:
+            header_var.set(headers[i])
+
+    # Commands
 
     match command:
+
+        # File Commands
 
         case "Copy":
 
