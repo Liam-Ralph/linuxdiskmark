@@ -31,6 +31,10 @@ import setproctitle
 import subprocess
 import sys
 
+# Other
+import keyboard
+import threading
+
 
 # Paths
 
@@ -42,6 +46,18 @@ PATH_DATA = "/usr/share/linuxdiskmark/data"
 PATH_LOGO = "/usr/share/linuxdiskmark/logo.png"
 PATH_DOC = "/usr/share/doc/linuxdiskmark"
 
+
+# Threading Functions
+
+def listen_for_commands():
+
+    global header_vars
+
+    while True:
+
+        if keyboard.is_pressed("ctrl+shift+c"):
+            header_vars[0].set("Copy")
+            run_header_command(0)
 
 # Functions
 
@@ -82,7 +98,7 @@ def open_window_home():
 
     # Header Variables
 
-    global header_var
+    global header_vars
 
     # Global Buttons
 
@@ -160,14 +176,68 @@ def open_window_home():
 
     # Header Frame
 
-    header_var = tkinter.StringVar(value = "File")
+    header_vars = [
+        tkinter.StringVar(value = "File"), tkinter.StringVar(value = "Settings"),
+        tkinter.StringVar(value = "Profile"), tkinter.StringVar(value = "Theme"),
+        tkinter.StringVar(value = "Help"), tkinter.StringVar(value = "Language")
+    ]
 
     file_options = ["Copy", "Save Text", "Save Image", "Exit"]
     tkinter.OptionMenu(
         frame_header,
-        header_var,
+        header_vars[0],
         *file_options,
-        command = run_header_command
+        command = lambda event: run_header_command(0)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    settings_options = []
+    tkinter.OptionMenu(
+        frame_header,
+        header_vars[1],
+        *settings_options,
+        command = lambda event: run_header_command(1)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    profile_options = []
+    tkinter.OptionMenu(
+        frame_header,
+        header_vars[2],
+        *profile_options,
+        command = lambda event: run_header_command(2)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    theme_options = []
+    tkinter.OptionMenu(
+        frame_header,
+        header_vars[3],
+        *theme_options,
+        command = lambda event: run_header_command(3)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    help_options = []
+    tkinter.OptionMenu(
+        frame_header,
+        header_vars[4],
+        *help_options,
+        command = lambda event: run_header_command(4)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    language_options = []
+    tkinter.OptionMenu(
+        frame_header,
+        header_vars[5],
+        *language_options,
+        command = lambda event: run_header_command(5)
     ).pack(
         side = tkinter.LEFT
     )
@@ -187,37 +257,39 @@ def open_window_home():
 
     window_home.update()
 
+    # Start Threading
+
+    command_thread = threading.Thread(target = listen_for_commands)
+    command_thread.daemon = True
+    command_thread.start()
+
     # Window Mainloop
 
     window_home.mainloop()
 
-def run_header_command():
-
-    command = header_var.get()
+def run_header_command(dropdown_num):
 
     # Header Variables
 
-    global header_var
+    global header_vars
 
+    command = header_vars[dropdown_num]
     headers = ["File", "Settings", "Profile", "Theme", "Help", "Language"]
-    dropdown_lists = [ # fix this at some point
-        ["Copy", "Save Text", "Save Image", "Exit"],
-        ["Test Data", "Default", "NVMe SSD", "Flash Memory", "Settings"],
-        [
-            "Default", "Peak Performance", "Real World Performance", "Demo",
-            "Default [+Mix]", "Peak Performance [+Mix]", "Real World Performance [+Mix]"
-        ],
-        ["Read&Write [+Mix]", "Read [+Mix]", "Write [+Mix]"],
-        [
-            "Zoom", "Font Setting", "Random", "Dark", "DarkRed", "Default", "Digital8", "Flower",
-            "Green", "LegendOfGreen", "LegendOfOrange"
-        ],
-        ["Select Language"]
-    ]
-
-    for i in range(len(dropdown_lists)):
-        if command in dropdown_lists[i]:
-            header_var.set(headers[i])
+    # dropdown_lists = [
+    #     ["Copy", "Save Text", "Save Image", "Exit"],
+    #     ["Test Data", "Default", "NVMe SSD", "Flash Memory", "Settings"],
+    #     [
+    #         "Default", "Peak Performance", "Real World Performance", "Demo",
+    #         "Default [+Mix]", "Peak Performance [+Mix]", "Real World Performance [+Mix]"
+    #     ],
+    #     ["Read&Write [+Mix]", "Read [+Mix]", "Write [+Mix]"],
+    #     [
+    #         "Zoom", "Font Setting", "Random", "Dark", "DarkRed", "Default", "Digital8", "Flower",
+    #         "Green", "LegendOfGreen", "LegendOfOrange"
+    #     ],
+    #     ["Select Language"]
+    # ]
+    header_vars[dropdown_num].set(headers[dropdown_num])
 
     # Commands
 
