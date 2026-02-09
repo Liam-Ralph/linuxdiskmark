@@ -53,11 +53,43 @@ def listen_for_commands():
 
     global header_vars
 
-    while True:
+    header_command_functions = [
+        run_copy, run_save_text, run_save_image, run_exit,
+    ]
+    header_command_keybinds = [
+        "ctrl+shift+c", "ctrl+t", "ctrl+s", "alt+f4"
+    ]
 
-        if keyboard.is_pressed("ctrl+shift+c"):
-            header_vars[0].set("Copy")
-            run_header_command(0)
+    while True:
+        for i in range(len(header_command_keybinds)):
+            if keyboard.is_pressed(header_command_keybinds[i]):
+                header_command_functions[i]()
+
+# Header Command Functions
+
+def run_copy():
+
+    clipboard_tk = tkinter.Tk()
+    clipboard_tk.withdraw()
+    clipboard_tk.clipboard_clear()
+    clipboard_tk.clipboard_append("Temp")
+    clipboard_tk.update()
+    clipboard_tk.destroy()
+
+def run_save_text():
+
+    pass
+
+def run_save_image():
+
+    pass
+
+def run_exit():
+
+    global exit_flag
+
+    exit_flag = True
+    window_home.destroy()
 
 # Functions
 
@@ -187,7 +219,7 @@ def open_window_home():
         frame_header,
         header_vars[0],
         *file_options,
-        command = lambda event: run_header_command(0)
+        command = lambda event: run_header_command(0, file_options.index(header_vars[0].get()))
     ).pack(
         side = tkinter.LEFT
     )
@@ -197,7 +229,7 @@ def open_window_home():
         frame_header,
         header_vars[1],
         *settings_options,
-        command = lambda event: run_header_command(1)
+        command = lambda event: run_header_command(1, settings_options.index(header_vars[1].get()))
     ).pack(
         side = tkinter.LEFT
     )
@@ -207,7 +239,7 @@ def open_window_home():
         frame_header,
         header_vars[2],
         *profile_options,
-        command = lambda event: run_header_command(2)
+        command = lambda event: run_header_command(2, profile_options.index(header_vars[2].get()))
     ).pack(
         side = tkinter.LEFT
     )
@@ -217,7 +249,7 @@ def open_window_home():
         frame_header,
         header_vars[3],
         *theme_options,
-        command = lambda event: run_header_command(3)
+        command = lambda event: run_header_command(3, theme_options.index(header_vars[3].get()))
     ).pack(
         side = tkinter.LEFT
     )
@@ -227,7 +259,7 @@ def open_window_home():
         frame_header,
         header_vars[4],
         *help_options,
-        command = lambda event: run_header_command(4)
+        command = lambda event: run_header_command(4, help_options.index(header_vars[4].get()))
     ).pack(
         side = tkinter.LEFT
     )
@@ -237,7 +269,7 @@ def open_window_home():
         frame_header,
         header_vars[5],
         *language_options,
-        command = lambda event: run_header_command(5)
+        command = lambda event: run_header_command(5, language_options.index(header_vars[5].get()))
     ).pack(
         side = tkinter.LEFT
     )
@@ -267,13 +299,21 @@ def open_window_home():
 
     window_home.mainloop()
 
-def run_header_command(dropdown_num):
+def run_header_command(header_num, dropdown_num):
+    """
+    Reset the header variable to its default value, and run the command
+    associated with the header and dropdown number.
+    
+    :param header_num: The header number. 0 = File, 1 = Settings, 2 = Profile,
+    3 = Theme, 4 = Help, 5 = Language
+    :param dropdown_num: The dropdown number. Used to run the command associated
+    with the header and dropdown numbers. 
+    """
 
-    # Header Variables
+    # Header Variable
 
     global header_vars
 
-    command = header_vars[dropdown_num]
     headers = ["File", "Settings", "Profile", "Theme", "Help", "Language"]
     # dropdown_lists = [
     #     ["Copy", "Save Text", "Save Image", "Exit"],
@@ -289,22 +329,14 @@ def run_header_command(dropdown_num):
     #     ],
     #     ["Select Language"]
     # ]
-    header_vars[dropdown_num].set(headers[dropdown_num])
+    header_vars[header_num].set(headers[dropdown_num])
 
     # Commands
 
-    match command:
-
-        # File Commands
-
-        case "Copy":
-
-            clipboard_tk = tkinter.Tk()
-            clipboard_tk.withdraw()
-            clipboard_tk.clipboard_clear()
-            clipboard_tk.clipboard_append("Temp")
-            clipboard_tk.update()
-            clipboard_tk.destroy()
+    header_command_functions = [
+        run_copy, run_save_text, run_save_image, run_exit,
+    ]
+    header_command_functions[header_num]()
 
 
 # Main Function
