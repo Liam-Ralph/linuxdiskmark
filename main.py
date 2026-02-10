@@ -32,7 +32,8 @@ import subprocess
 import sys
 
 # Other
-import keyboard
+
+import pynput.keyboard
 import threading
 
 
@@ -51,19 +52,29 @@ PATH_DOC = "/usr/share/doc/linuxdiskmark"
 
 def listen_for_commands():
 
-    global header_vars
+    with pynput.keyboard.Listener(on_press = run_keyboard_command) as listener:
+        pass
+
+def run_keyboard_command(key): # Not working
 
     header_command_functions = [
         run_copy, run_save_text, run_save_image, run_exit,
     ]
     header_command_keybinds = [
-        "ctrl+shift+c", "ctrl+t", "ctrl+s", "alt+f4"
+        [
+            pynput.keyboard.Key.ctrl, pynput.keyboard.Key.shift,
+            pynput.keyboard.KeyCode.from_char("c")
+        ],
+        [pynput.keyboard.Key.ctrl, pynput.keyboard.KeyCode.from_char("t")],
+        [pynput.keyboard.Key.ctrl, pynput.keyboard.KeyCode.from_char("s")],
+        [pynput.keyboard.Key.alt, pynput.keyboard.Key.f4]
+        # "ctrl+shift+c", "ctrl+t", "ctrl+s", "alt+f4"
     ]
 
-    while True:
-        for i in range(len(header_command_keybinds)):
-            if keyboard.is_pressed(header_command_keybinds[i]):
-                header_command_functions[i]()
+    for i in range(len(header_command_keybinds)):
+        if header_command_keybinds[i] == key:
+            header_command_functions[i]()
+            break
 
 # Header Command Functions
 
@@ -224,7 +235,9 @@ def open_window_home():
         side = tkinter.LEFT
     )
 
-    settings_options = ["Test Data", "Default", "NVMe SSD", "Flash Memory", "Settings"]
+    settings_options = [
+        "Test Data", "____________", "Default", "NVMe SSD", "Flash Memory", "____________", "Settings"
+    ]
     tkinter.OptionMenu(
         frame_header,
         header_vars[1],
@@ -322,20 +335,6 @@ def run_header_command(header_num, dropdown_num):
     global header_vars
 
     headers = ["File", "Settings", "Profile", "Theme", "Help", "Language"]
-    # dropdown_lists = [
-    #     ["Copy", "Save Text", "Save Image", "Exit"],
-    #     ["Test Data", "Default", "NVMe SSD", "Flash Memory", "Settings"],
-    #     [
-    #         "Default", "Peak Performance", "Real World Performance", "Demo",
-    #         "Default [+Mix]", "Peak Performance [+Mix]", "Real World Performance [+Mix]"
-    #     ],
-    #     ["Read&Write [+Mix]", "Read [+Mix]", "Write [+Mix]"],
-    #     [
-    #         "Zoom", "Font Setting", "Random", "Dark", "DarkRed", "Default", "Digital8", "Flower",
-    #         "Green", "LegendOfGreen", "LegendOfOrange"
-    #     ],
-    #     ["Select Language"]
-    # ]
     header_vars[header_num].set(headers[dropdown_num])
 
     # Commands
