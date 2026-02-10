@@ -33,7 +33,7 @@ import sys
 
 # Other
 
-import pynput.keyboard
+import keyboard
 import threading
 
 
@@ -52,29 +52,10 @@ PATH_DOC = "/usr/share/doc/linuxdiskmark"
 
 def listen_for_commands():
 
-    with pynput.keyboard.Listener(on_press = run_keyboard_command) as listener:
-        pass
-
-def run_keyboard_command(key): # Not working
-
-    header_command_functions = [
-        run_copy, run_save_text, run_save_image, run_exit,
-    ]
-    header_command_keybinds = [
-        [
-            pynput.keyboard.Key.ctrl, pynput.keyboard.Key.shift,
-            pynput.keyboard.KeyCode.from_char("c")
-        ],
-        [pynput.keyboard.Key.ctrl, pynput.keyboard.KeyCode.from_char("t")],
-        [pynput.keyboard.Key.ctrl, pynput.keyboard.KeyCode.from_char("s")],
-        [pynput.keyboard.Key.alt, pynput.keyboard.Key.f4]
-        # "ctrl+shift+c", "ctrl+t", "ctrl+s", "alt+f4"
-    ]
-
-    for i in range(len(header_command_keybinds)):
-        if header_command_keybinds[i] == key:
-            header_command_functions[i]()
-            break
+    keyboard.add_hotkey("ctrl+shift+c", run_copy)
+    keyboard.add_hotkey("ctrl+t", run_save_text)
+    keyboard.add_hotkey("ctrl+s", run_save_image)
+    keyboard.add_hotkey("alt+f4", run_exit)
 
 # Header Command Functions
 
