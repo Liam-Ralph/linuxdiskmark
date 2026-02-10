@@ -217,7 +217,7 @@ def open_window_home():
     )
 
     settings_options = [
-        "Test Data", "____________", "Default", "NVMe SSD", "Flash Memory", "____________", "Settings"
+        "Test Data", "__________", "Default", "NVMe SSD", "Flash Memory", "__________", "Settings"
     ]
     tkinter.OptionMenu(
         frame_header,
@@ -230,7 +230,7 @@ def open_window_home():
 
     profile_options = [
         "Default", "Peak Performance", "Real World Performance", "Demo",
-        "Default [+Mix]", "Peak Performance [+Mix]", "Real World Performance [+Mix]",
+        "Default [+Mix]", "Peak Performance [+Mix]", "Real World Performance [+Mix]", "__________",
         "Read&Write [+Mix]", "Read [+Mix]", "Write [+Mix]"
     ]
     tkinter.OptionMenu(
@@ -243,7 +243,8 @@ def open_window_home():
     )
 
     theme_options = [
-        "Zoom", "Font Setting", "Random", "Dark", "DarkRed", "Default", "Digital8", "Flower",
+        "Zoom", "Font Setting",  "__________",
+        "Random", "Dark", "DarkRed", "Default", "Digital8", "Flower",
         "Green", "LegendOfGreen", "LegendOfOrange"
     ]
     tkinter.OptionMenu(
@@ -255,7 +256,7 @@ def open_window_home():
         side = tkinter.LEFT
     )
 
-    help_options = ["Help", "LinuxDiskMark", "About LinuxDiskMark"]
+    help_options = ["Help", "LinuxDiskMark", "__________", "About LinuxDiskMark"]
     tkinter.OptionMenu(
         frame_header,
         header_vars[4],
@@ -321,9 +322,9 @@ def run_header_command(header_num, dropdown_num):
     # Commands
 
     header_command_functions = [
-        run_copy, run_save_text, run_save_image, run_exit,
+        [run_copy, run_save_text, run_save_image, run_exit]
     ]
-    header_command_functions[header_num]()
+    header_command_functions[header_num][dropdown_num]()
 
 
 # Main Function
