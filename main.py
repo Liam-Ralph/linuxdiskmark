@@ -322,7 +322,12 @@ def run_header_command(header_num, dropdown_num):
     # Commands
 
     header_command_functions = [
-        [run_copy, run_save_text, run_save_image, run_exit]
+        [run_copy, run_save_text, run_save_image, run_exit],
+        [],
+        [],
+        [],
+        [],
+        []
     ]
     header_command_functions[header_num][dropdown_num]()
 
