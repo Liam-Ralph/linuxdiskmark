@@ -224,7 +224,7 @@ def open_window_home():
         side = tkinter.LEFT
     )
 
-    settings_options = []
+    settings_options = ["Test Data", "Default", "NVMe SSD", "Flash Memory", "Settings"]
     tkinter.OptionMenu(
         frame_header,
         header_vars[1],
@@ -234,7 +234,11 @@ def open_window_home():
         side = tkinter.LEFT
     )
 
-    profile_options = []
+    profile_options = [
+        "Default", "Peak Performance", "Real World Performance", "Demo",
+        "Default [+Mix]", "Peak Performance [+Mix]", "Real World Performance [+Mix]",
+        "Read&Write [+Mix]", "Read [+Mix]", "Write [+Mix]"
+    ]
     tkinter.OptionMenu(
         frame_header,
         header_vars[2],
@@ -244,7 +248,10 @@ def open_window_home():
         side = tkinter.LEFT
     )
 
-    theme_options = []
+    theme_options = [
+        "Zoom", "Font Setting", "Random", "Dark", "DarkRed", "Default", "Digital8", "Flower",
+        "Green", "LegendOfGreen", "LegendOfOrange"
+    ]
     tkinter.OptionMenu(
         frame_header,
         header_vars[3],
@@ -254,7 +261,7 @@ def open_window_home():
         side = tkinter.LEFT
     )
 
-    help_options = []
+    help_options = ["Help", "LinuxDiskMark", "About LinuxDiskMark"]
     tkinter.OptionMenu(
         frame_header,
         header_vars[4],
@@ -264,7 +271,7 @@ def open_window_home():
         side = tkinter.LEFT
     )
 
-    language_options = []
+    language_options = ["English [English]"]
     tkinter.OptionMenu(
         frame_header,
         header_vars[5],
