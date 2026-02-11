@@ -6,7 +6,8 @@
 # See LICENSE or this project's source for more information.
 # Project source: https://github.com/liam-ralph/linuxdiskmark
 
-# LinuxDiskMark, a disk benchmarking tool using fio.
+# LinuxDiskMark, a disk benchmarking tool using fio,
+# inspired by CrystalDiskMark.
 
 # To convert this script into a standalone Python program, change
 # the paths under Paths, and remove the section "Getting Root
@@ -61,10 +62,20 @@ def listen_for_commands():
 
 def run_copy():
 
+    text = (
+        "-" * 78 + "\n" +
+        "LinuxDiskMark " + version + " (C) 2026 Liam Ralph\n" +
+        "https://liam-ralph.github.io/projects/linuxdiskmark\n" +
+        "-" * 78 + "\n" +
+        "* MB/s = 1,000,000 bytes/s [SATA/600 = 6000,000,000 bytes/s]\n" +
+        "* KB = 1000 bytes, KiB = 1024 bytes\n\n" +
+        "[Read]\n"
+    )
+
     clipboard_tk = tkinter.Tk()
     clipboard_tk.withdraw()
     clipboard_tk.clipboard_clear()
-    clipboard_tk.clipboard_append("Temp")
+    clipboard_tk.clipboard_append(text)
     clipboard_tk.update()
     clipboard_tk.destroy()
 
@@ -329,7 +340,8 @@ def run_header_command(header_num, dropdown_num):
         [],
         []
     ]
-    header_command_functions[header_num][dropdown_num]()
+    if header_command_functions[header_num][dropdown_num] is not None:
+        header_command_functions[header_num][dropdown_num]
 
 
 # Main Function
