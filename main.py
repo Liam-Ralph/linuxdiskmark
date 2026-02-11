@@ -62,15 +62,52 @@ def listen_for_commands():
 
 def run_copy():
 
+    # Result Variables
+
+    global results_read
+    global results_write
+    global results_mixed
+
+    # Text Formatting
+
     text = (
         "-" * 78 + "\n" +
         "LinuxDiskMark " + version + " (C) 2026 Liam Ralph\n" +
         "https://liam-ralph.github.io/projects/linuxdiskmark\n" +
         "-" * 78 + "\n" +
         "* MB/s = 1,000,000 bytes/s [SATA/600 = 6000,000,000 bytes/s]\n" +
-        "* KB = 1000 bytes, KiB = 1024 bytes\n\n" +
-        "[Read]\n"
+        "* KB = 1000 bytes, KiB = 1024 bytes\n\n"
     )
+
+    if results_read is not None:
+        text += (
+            "[Read]\n" +
+            "\n"
+        )
+
+    if results_write is not None:
+        text += (
+            "[Write]\n" +
+            "\n"
+        )
+
+    if results_mixed is not None:
+        text += (
+            "[Mixed]\n" +
+            "\n"
+        )
+
+    text += (
+        "Profile: " + profile + "\n"
+        "   Test: " + f"test_size_formatted (x{test_count}) [{test_path}]\n" +
+        "   Date: "
+    )
+
+    # format current date
+
+    # get OS name
+
+    # Copying to Clipboard
 
     clipboard_tk = tkinter.Tk()
     clipboard_tk.withdraw()
@@ -109,7 +146,7 @@ def check_exit_flag():
     if exit_flag:
         sys.exit()
 
-def open_window_home():
+def open_window_home(wide = False, open_settings = False):
     """
     Open home/main window.
     """
@@ -118,12 +155,21 @@ def open_window_home():
 
     global window_home
 
-    # Info and Settings Variables
+    # Info Variables
 
     global names
     global created
     global version
     global updated
+
+    # Settings Variables
+
+    global test_count
+    global test_size
+    global test_path
+
+    global profile
+    global rw
 
     global background
     global foreground
@@ -131,9 +177,11 @@ def open_window_home():
     global bg_image
     global font
 
-    # Header Variables
+    # Result Variables
 
-    global header_vars
+    global results_read
+    global results_write
+    global results_mixed
 
     # Global Buttons
 
@@ -163,7 +211,10 @@ def open_window_home():
 
     # Window Setup
 
-    window_width = 480
+    if wide:
+        window_width = 660
+    else:
+        window_width = 480
     window_height = 320
 
     window_home = tkinter.Tk()
@@ -211,78 +262,39 @@ def open_window_home():
 
     # Header Frame
 
-    header_vars = [
-        tkinter.StringVar(value = "File"), tkinter.StringVar(value = "Settings"),
-        tkinter.StringVar(value = "Profile"), tkinter.StringVar(value = "Theme"),
-        tkinter.StringVar(value = "Help"), tkinter.StringVar(value = "Language")
-    ]
-
+    file_var = tkinter.StringVar(value = "File")
     file_options = ["Copy", "Save Text", "Save Image", "Exit"]
     tkinter.OptionMenu(
         frame_header,
-        header_vars[0],
+        file_var,
         *file_options,
-        command = lambda event: run_header_command(0, file_options.index(header_vars[0].get()))
+        command = run_file_command
     ).pack(
         side = tkinter.LEFT
     )
 
-    settings_options = [
-        "Test Data", "__________", "Default", "NVMe SSD", "Flash Memory", "__________", "Settings"
-    ]
-    tkinter.OptionMenu(
+    tkinter.Button(
         frame_header,
-        header_vars[1],
-        *settings_options,
-        command = lambda event: run_header_command(1, settings_options.index(header_vars[1].get()))
+        text = "Settings",
+        font = (font, 10),
+        width = 9,
+        height = 1,
+        fg = foreground,
+        bg = background,
+        command = open_window_settings
     ).pack(
         side = tkinter.LEFT
     )
 
-    profile_options = [
-        "Default", "Peak Performance", "Real World Performance", "Demo",
-        "Default [+Mix]", "Peak Performance [+Mix]", "Real World Performance [+Mix]", "__________",
-        "Read&Write [+Mix]", "Read [+Mix]", "Write [+Mix]"
-    ]
-    tkinter.OptionMenu(
+    tkinter.Button(
         frame_header,
-        header_vars[2],
-        *profile_options,
-        command = lambda event: run_header_command(2, profile_options.index(header_vars[2].get()))
-    ).pack(
-        side = tkinter.LEFT
-    )
-
-    theme_options = [
-        "Zoom", "Font Setting",  "__________",
-        "Random", "Dark", "DarkRed", "Default", "Digital8", "Flower",
-        "Green", "LegendOfGreen", "LegendOfOrange"
-    ]
-    tkinter.OptionMenu(
-        frame_header,
-        header_vars[3],
-        *theme_options,
-        command = lambda event: run_header_command(3, theme_options.index(header_vars[3].get()))
-    ).pack(
-        side = tkinter.LEFT
-    )
-
-    help_options = ["Help", "LinuxDiskMark", "__________", "About LinuxDiskMark"]
-    tkinter.OptionMenu(
-        frame_header,
-        header_vars[4],
-        *help_options,
-        command = lambda event: run_header_command(4, help_options.index(header_vars[4].get()))
-    ).pack(
-        side = tkinter.LEFT
-    )
-
-    language_options = ["English [English]"]
-    tkinter.OptionMenu(
-        frame_header,
-        header_vars[5],
-        *language_options,
-        command = lambda event: run_header_command(5, language_options.index(header_vars[5].get()))
+        text = "Info",
+        font = (font, 10),
+        width = 6,
+        height = 1,
+        fg = foreground,
+        bg = background,
+        command = open_window_info
     ).pack(
         side = tkinter.LEFT
     )
@@ -308,40 +320,30 @@ def open_window_home():
     command_thread.daemon = True
     command_thread.start()
 
+    # Open Settings Window
+
+    if open_settings:
+        open_window_settings()
+
     # Window Mainloop
 
     window_home.mainloop()
 
-def run_header_command(header_num, dropdown_num):
-    """
-    Reset the header variable to its default value, and run the command
-    associated with the header and dropdown number.
+def open_window_info():
+
+    pass
+
+def open_window_settings():
+
+    pass
+
+def run_file_command(file_var):
+
+    command_names = ["Copy", "Save Text", "Save Image", "Exit"]
+    command_functions = [run_copy, run_save_text, run_save_image, run_exit]
     
-    :param header_num: The header number. 0 = File, 1 = Settings, 2 = Profile,
-    3 = Theme, 4 = Help, 5 = Language
-    :param dropdown_num: The dropdown number. Used to run the command associated
-    with the header and dropdown numbers. 
-    """
-
-    # Header Variable
-
-    global header_vars
-
-    headers = ["File", "Settings", "Profile", "Theme", "Help", "Language"]
-    header_vars[header_num].set(headers[dropdown_num])
-
-    # Commands
-
-    header_command_functions = [
-        [run_copy, run_save_text, run_save_image, run_exit],
-        [],
-        [],
-        [],
-        [],
-        []
-    ]
-    if header_command_functions[header_num][dropdown_num] is not None:
-        header_command_functions[header_num][dropdown_num]
+    command_functions[command_names.index(file_var.get())]()
+    file_var.set("File")
 
 
 # Main Function
@@ -351,18 +353,37 @@ def main():
     Main Function. Run startup and open home window.
     """
 
-    # Info and Settings Variables
+    # Info Variables
 
     global names
     global created
     global version
     global updated
 
+    # Settings Variables
+
+    global test_count
+    global test_size
+    global test_data
+    global test_path
+
+    global profile
+    global rw
+
     global background
     global foreground
     global highlight
     global bg_image
     global font
+
+    global unit
+    global language
+
+    # Result Variables
+    
+    global results_read
+    global results_write
+    global results_mixed
 
     # Exit Flag
 
@@ -401,11 +422,40 @@ def main():
 
     with open(PATH_DATA + "/settings.txt", "r") as file:
         settings_raw = file.read().split("\n")
-    background = settings_raw[0].replace("background: ", "")
-    foreground = settings_raw[1].replace("foreground: ", "")
-    highlight = settings_raw[2].replace("highlight: ", "")
-    bg_image = settings_raw[3].replace("bg_image: ", "")
-    font = settings_raw[4].replace("font: ", "")
+
+    test_count = int(settings_raw[1].replace("test_count: ", ""))
+    test_size = int(settings_raw[2].replace("test_size: ", ""))
+    test_data = settings_raw[3].replace("test_data: ", "")
+    test_path = settings_raw[4].replace("test_path: ", "")
+
+    profile = settings_raw[7].replace("profile: ", "")
+    rw = settings_raw[8].replace("rw: ", "")
+
+    background = settings_raw[11].replace("background: ", "")
+    foreground = settings_raw[12].replace("foreground: ", "")
+    highlight = settings_raw[13].replace("highlight: ", "")
+    bg_image = settings_raw[14].replace("bg_image: ", "")
+    font = settings_raw[15].replace("font: ", "")
+
+    unit = settings_raw[18].replace("unit: ", "")
+    language = settings_raw[19].replace("language: ", "")
+
+    # Results
+
+    if ("r" in rw):
+        results_read = [0, 0, 0, 0]
+    else:
+        results_read = None
+
+    if ("w" in rw):
+        results_write = [0, 0, 0, 0]
+    else:
+        results_write = None
+
+    if ("m" in rw):
+        results_mixed = [0, 0, 0, 0]
+    else:
+        results_mixed = None
 
     # Process Title
 

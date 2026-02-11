@@ -1,5 +1,20 @@
+Test Settings
+test_count: 3
+test_size: 1024
+test_data: default
+test_path: /tmp/
+
+Profile Settings
+profile: default
+rw: rw
+
+Theme Settings
 background: #FFFFFF
 foreground: #000000
 highlight: #00AA00
-bg-image: None
+bg_image: None
 font: DejaVu Sans
+
+Other Settings
+unit: MB/s
+language: en
