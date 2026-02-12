@@ -1,6 +1,6 @@
 Test Settings
 test_count: 3
-test_size: 1024
+test_size: 1GiB
 test_data: default
 test_path: /tmp/
 

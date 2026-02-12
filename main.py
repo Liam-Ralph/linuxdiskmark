@@ -28,12 +28,14 @@ from PIL import Image, ImageTk
 # System
 
 import os
+import platform
 import setproctitle
 import subprocess
 import sys
 
 # Other
 
+import datetime
 import keyboard
 import threading
 
@@ -53,14 +55,14 @@ PATH_DOC = "/usr/share/doc/linuxdiskmark"
 
 def listen_for_commands():
 
-    keyboard.add_hotkey("ctrl+shift+c", run_copy)
-    keyboard.add_hotkey("ctrl+t", run_save_text)
-    keyboard.add_hotkey("ctrl+s", run_save_image)
-    keyboard.add_hotkey("alt+f4", run_exit)
+    keyboard.add_hotkey("ctrl+shift+c", copy_text)
+    keyboard.add_hotkey("ctrl+t", save_text)
+    keyboard.add_hotkey("ctrl+s", save_image)
+    keyboard.add_hotkey("alt+f4", exit_program)
 
 # Header Command Functions
 
-def run_copy():
+def copy_text():
 
     # Result Variables
 
@@ -99,13 +101,18 @@ def run_copy():
 
     text += (
         "Profile: " + profile + "\n"
-        "   Test: " + f"test_size_formatted (x{test_count}) [{test_path}]\n" +
-        "   Date: "
+        "   Test: " + f"{test_size} (x{test_count}) [{test_path}]\n" +
+        "   Date: " + datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S") + "\n"
     )
 
-    # format current date
-
-    # get OS name
+    with open("/etc/os-release") as file:
+        file_line = file.readline()
+        while ("PRETTY_NAME=\"" not in file_line):
+            file_line = file.readline()
+        text += (
+            "     OS: " + file_line.replace("PRETTY_NAME=\"", "").replace("\"\n", "") +
+            f" [Kernel: {platform.release()}]\n"
+        )
 
     # Copying to Clipboard
 
@@ -116,15 +123,15 @@ def run_copy():
     clipboard_tk.update()
     clipboard_tk.destroy()
 
-def run_save_text():
+def save_text():
 
     pass
 
-def run_save_image():
+def save_image():
 
     pass
 
-def run_exit():
+def exit_program():
 
     global exit_flag
 
@@ -268,7 +275,7 @@ def open_window_home(wide = False, open_settings = False):
         frame_header,
         file_var,
         *file_options,
-        command = run_file_command
+        command = lambda event: run_file_command(file_var)
     ).pack(
         side = tkinter.LEFT
     )
@@ -340,7 +347,7 @@ def open_window_settings():
 def run_file_command(file_var):
 
     command_names = ["Copy", "Save Text", "Save Image", "Exit"]
-    command_functions = [run_copy, run_save_text, run_save_image, run_exit]
+    command_functions = [copy_text, save_text, save_image, exit_program]
     
     command_functions[command_names.index(file_var.get())]()
     file_var.set("File")
@@ -424,7 +431,7 @@ def main():
         settings_raw = file.read().split("\n")
 
     test_count = int(settings_raw[1].replace("test_count: ", ""))
-    test_size = int(settings_raw[2].replace("test_size: ", ""))
+    test_size = settings_raw[2].replace("test_size: ", "")
     test_data = settings_raw[3].replace("test_data: ", "")
     test_path = settings_raw[4].replace("test_path: ", "")
 
