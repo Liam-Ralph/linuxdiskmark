@@ -51,107 +51,7 @@ PATH_LOGO = "/usr/share/linuxdiskmark/logo.png"
 PATH_DOC = "/usr/share/doc/linuxdiskmark"
 
 
-# Threading Functions
-
-def listen_for_commands():
-
-    keyboard.add_hotkey("ctrl+shift+c", copy_text)
-    keyboard.add_hotkey("ctrl+t", save_text)
-    keyboard.add_hotkey("ctrl+s", save_image)
-    keyboard.add_hotkey("alt+f4", exit_program)
-
-# Header Command Functions
-
-def copy_text():
-
-    # Result Variables
-
-    global results_read
-    global results_write
-    global results_mixed
-
-    # Text Formatting
-
-    text = (
-        "-" * 78 + "\n" +
-        "LinuxDiskMark " + version + " (C) 2026 Liam Ralph\n" +
-        "https://liam-ralph.github.io/projects/linuxdiskmark\n" +
-        "-" * 78 + "\n" +
-        "* MB/s = 1,000,000 bytes/s [SATA/600 = 6000,000,000 bytes/s]\n" +
-        "* KB = 1000 bytes, KiB = 1024 bytes\n\n"
-    )
-
-    if results_read is not None:
-        text += (
-            "[Read]\n" +
-            "\n"
-        )
-
-    if results_write is not None:
-        text += (
-            "[Write]\n" +
-            "\n"
-        )
-
-    if results_mixed is not None:
-        text += (
-            "[Mixed]\n" +
-            "\n"
-        )
-
-    text += (
-        "Profile: " + profile + "\n"
-        "   Test: " + f"{test_size} (x{test_count}) [{test_path}]\n" +
-        "   Date: " + datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S") + "\n"
-    )
-
-    with open("/etc/os-release") as file:
-        file_line = file.readline()
-        while ("PRETTY_NAME=\"" not in file_line):
-            file_line = file.readline()
-        text += (
-            "     OS: " + file_line.replace("PRETTY_NAME=\"", "").replace("\"\n", "") +
-            f" [Kernel: {platform.release()}]\n"
-        )
-
-    # Copying to Clipboard
-
-    clipboard_tk = tkinter.Tk()
-    clipboard_tk.withdraw()
-    clipboard_tk.clipboard_clear()
-    clipboard_tk.clipboard_append(text)
-    clipboard_tk.update()
-    clipboard_tk.destroy()
-
-def save_text():
-
-    pass
-
-def save_image():
-
-    pass
-
-def exit_program():
-
-    global exit_flag
-
-    exit_flag = True
-    window_home.destroy()
-
-# Functions
-
-def check_exit_flag():
-    """
-    Check whether the exit flag is active. If the exit flag is active, the
-    program will exit (user closed home window). If the exit flag is inactive,
-    the windows are being reloaded (e.g. after settings change) and the program
-    does not exit.
-    """
-
-    global exit_flag
-
-    if exit_flag:
-        sys.exit()
+# Home Window Functions
 
 def open_window_home(wide = False, open_settings = False):
     """
@@ -336,13 +236,32 @@ def open_window_home(wide = False, open_settings = False):
 
     window_home.mainloop()
 
+def check_exit_flag():
+    """
+    Check whether the exit flag is active. If the exit flag is active, the
+    program will exit (user closed home window). If the exit flag is inactive,
+    the windows are being reloaded (e.g. after settings change) and the program
+    does not exit.
+    """
+
+    global exit_flag
+
+    if exit_flag:
+        sys.exit()
+
+# Info Window Functions
+
 def open_window_info():
 
     pass
 
+# Settings Window Functions
+
 def open_window_settings():
 
     pass
+
+# File Header Command Functions
 
 def run_file_command(file_var):
 
@@ -351,6 +270,89 @@ def run_file_command(file_var):
     
     command_functions[command_names.index(file_var.get())]()
     file_var.set("File")
+
+def listen_for_commands():
+
+    keyboard.add_hotkey("ctrl+shift+c", copy_text)
+    keyboard.add_hotkey("ctrl+t", save_text)
+    keyboard.add_hotkey("ctrl+s", save_image)
+    keyboard.add_hotkey("alt+f4", exit_program)
+
+def copy_text():
+
+    # Result Variables
+
+    global results_read
+    global results_write
+    global results_mixed
+
+    # Text Formatting
+
+    text = (
+        "-" * 78 + "\n" +
+        "LinuxDiskMark " + version + " (C) 2026 Liam Ralph\n" +
+        "https://liam-ralph.github.io/projects/linuxdiskmark\n" +
+        "-" * 78 + "\n" +
+        "* MB/s = 1,000,000 bytes/s [SATA/600 = 6000,000,000 bytes/s]\n" +
+        "* KB = 1000 bytes, KiB = 1024 bytes\n\n"
+    )
+
+    if results_read is not None:
+        text += (
+            "[Read]\n" +
+            "\n"
+        )
+
+    if results_write is not None:
+        text += (
+            "[Write]\n" +
+            "\n"
+        )
+
+    if results_mixed is not None:
+        text += (
+            "[Mixed]\n" +
+            "\n"
+        )
+
+    text += (
+        "Profile: " + profile + "\n"
+        "   Test: " + f"{test_size} (x{test_count}) [{test_path}]\n" +
+        "   Date: " + datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S") + "\n"
+    )
+
+    with open("/etc/os-release") as file:
+        file_line = file.readline()
+        while ("PRETTY_NAME=\"" not in file_line):
+            file_line = file.readline()
+        text += (
+            "     OS: " + file_line.replace("PRETTY_NAME=\"", "").replace("\"\n", "") +
+            f" [Kernel: {platform.release()}]\n"
+        )
+
+    # Copying to Clipboard
+
+    clipboard_tk = tkinter.Tk()
+    clipboard_tk.withdraw()
+    clipboard_tk.clipboard_clear()
+    clipboard_tk.clipboard_append(text)
+    clipboard_tk.update()
+    clipboard_tk.destroy()
+
+def save_text():
+
+    pass
+
+def save_image():
+
+    pass
+
+def exit_program():
+
+    global exit_flag
+
+    exit_flag = True
+    window_home.destroy()
 
 
 # Main Function
