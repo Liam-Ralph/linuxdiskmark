@@ -6,7 +6,7 @@ test_path: /tmp/
 
 Profile Settings
 profile: default
-rw: rw
+mix: False
 
 Theme Settings
 background: #FFFFFF

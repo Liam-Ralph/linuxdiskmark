@@ -53,7 +53,7 @@ PATH_DOC = "/usr/share/doc/linuxdiskmark"
 
 # Home Window Functions
 
-def open_window_home(wide = False, open_settings = False):
+def open_window_home(open_settings = False):
     """
     Open home/main window.
     """
@@ -76,7 +76,7 @@ def open_window_home(wide = False, open_settings = False):
     global test_path
 
     global profile
-    global rw
+    global mix
 
     global background
     global foreground
@@ -118,7 +118,7 @@ def open_window_home(wide = False, open_settings = False):
 
     # Window Setup
 
-    if wide:
+    if mix:
         window_width = 660
     else:
         window_width = 480
@@ -206,6 +206,279 @@ def open_window_home(wide = False, open_settings = False):
         side = tkinter.LEFT
     )
 
+    # Main Frame
+
+    frame_row_1 = tkinter.Frame(
+        frame_main,
+        width = window_width,
+        height = 50,
+        bg = background
+    )
+    frame_row_1.pack_propagate(False)
+    frame_row_1.pack(
+        padx = 5,
+        pady = 1
+    )
+
+    frame_row_2 = tkinter.Frame(
+        frame_main,
+        width = window_width,
+        height = 50,
+        bg = background
+    )
+    frame_row_2.pack_propagate(False)
+    frame_row_2.pack(
+        padx = 5,
+        pady = 1
+    )
+
+    frame_row_3 = tkinter.Frame(
+        frame_main,
+        width = window_width,
+        height = 50,
+        bg = background
+    )
+    frame_row_3.pack_propagate(False)
+    frame_row_3.pack(
+        padx = 5,
+        pady = 1
+    )
+
+    frame_row_4 = tkinter.Frame(
+        frame_main,
+        width = window_width,
+        height = 50,
+        bg = background
+    )
+    frame_row_4.pack_propagate(False)
+    frame_row_4.pack(
+        padx = 5,
+        pady = 1
+    )
+
+    frame_row_5 = tkinter.Frame(
+        frame_main,
+        width = window_width,
+        height = 50,
+        bg = background
+    )
+    frame_row_5.pack_propagate(False)
+    frame_row_5.pack(
+        padx = 5,
+        pady = 1
+    )
+
+    # Main Frame - Row 1
+
+    tkinter.Button(
+        frame_row_1,
+        text = "All",
+        font = (font, 12),
+        width = 5,
+        height = 4,
+        fg = foreground,
+        bg = highlight,
+        activebackground = shift_color(highlight, True),
+        command = lambda: run_benchmark(0)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    frame_row_1_1 = tkinter.Frame(
+        frame_row_1,
+        width = window_width - 60,
+        height = 25,
+        bg = background
+    )
+    frame_row_1_1.pack_propagate(False)
+    frame_row_1_1.pack(
+        side = tkinter.TOP,
+        padx = 1
+    )
+
+    frame_row_1_2 = tkinter.Frame(
+        frame_row_1,
+        width = window_width - 60,
+        height = 25,
+        bg = background
+    )
+    frame_row_1_2.pack_propagate(False)
+    frame_row_1_2.pack(
+        side = tkinter.TOP,
+        padx = 1
+    )
+
+    # Main Frame - Row 1-1
+
+    test_count_var = tkinter.IntVar(value = test_count)
+    test_count_options = list(range(1, 10))
+    tkinter.OptionMenu(
+        frame_row_1_1,
+        test_count_var,
+        *test_count_options,
+        command = lambda event: change_setting("test_count", test_count_var.get())
+    ).pack(
+        side = tkinter.LEFT,
+        padx = 1
+    )
+
+    test_size_var = tkinter.StringVar(value = test_size)
+    test_size_options = [
+        "16MiB", "32MiB", "64MiB", "128MiB", "256MiB", "512MiB",
+        "1GiB", "2GiB", "4GiB", "8GiB", "16GiB", "32GiB", "64GiB"
+    ]
+    tkinter.OptionMenu(
+        frame_row_1_1,
+        test_size_var,
+        *test_size_options,
+        command = lambda event: change_setting("test_size", test_size_var.get())
+    ).pack(
+        side = tkinter.LEFT,
+        padx = 1
+    )
+
+    # placeholder for test path
+
+    unit_var = tkinter.StringVar(value = unit)
+    unit_options = ["MB/s", "GB/s"]
+    tkinter.OptionMenu(
+        frame_row_1_1,
+        unit_var,
+        *unit_options,
+        command = lambda event: change_setting("unit", unit_var.get())
+    ).pack(
+        side = tkinter.LEFT,
+        padx = 1
+    )
+
+    # Main Frame - Row 1-2
+
+    frame_row_1_2_col_1 = tkinter.Frame(
+        frame_row_1_2,
+        width = 180,
+        height = 25,
+        bg = background
+    )
+    frame_row_1_2_col_1.pack_propagate(False)
+    frame_row_1_2_col_1.pack(
+        side = tkinter.LEFT,
+        padx = 1
+    )
+
+    tkinter.Label(
+        frame_row_1_2_col_1,
+        text = f"Read ({unit})",
+        font = (font, 12),
+        bg = background,
+        fg = foreground
+    ).pack()
+
+    frame_row_1_2_col_2 = tkinter.Frame(
+        frame_row_1_2,
+        width = 180,
+        height = 25,
+        bg = background
+    )
+    frame_row_1_2_col_2.pack_propagate(False)
+    frame_row_1_2_col_2.pack(
+        side = tkinter.LEFT,
+        padx = 1
+    )
+
+    tkinter.Label(
+        frame_row_1_2_col_2,
+        text = f"Write ({unit})",
+        font = (font, 12),
+        bg = background,
+        fg = foreground
+    ).pack()
+
+    if mix:
+
+        frame_row_1_2_col_3 = tkinter.Frame(
+            frame_row_1_2,
+            width = 180,
+            height = 25,
+            bg = background
+        )
+        frame_row_1_2_col_3.pack_propagate(False)
+        frame_row_1_2_col_3.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        tkinter.Label(
+            frame_row_1_2_col_3,
+            text = f"Mix ({unit})",
+            font = (font, 12),
+            bg = background,
+            fg = foreground
+        ).pack()
+
+    # Main Frame - Row 2
+
+    tkinter.Button(
+        frame_row_2,
+        text = "",
+        font = (font, 12),
+        width = 5,
+        height = 4,
+        fg = foreground,
+        bg = highlight,
+        activebackground = shift_color(highlight, True),
+        command = lambda: run_benchmark(1)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    # Main Frame - Row 3
+
+    tkinter.Button(
+        frame_row_3,
+        text = "",
+        font = (font, 12),
+        width = 5,
+        height = 4,
+        fg = foreground,
+        bg = highlight,
+        activebackground = shift_color(highlight, True),
+        command = lambda: run_benchmark(2)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    # Main Frame - Row 4
+
+    tkinter.Button(
+        frame_row_4,
+        text = "",
+        font = (font, 12),
+        width = 5,
+        height = 4,
+        fg = foreground,
+        bg = highlight,
+        activebackground = shift_color(highlight, True),
+        command = lambda: run_benchmark(3)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
+    # Main Frame - Row 5
+
+    tkinter.Button(
+        frame_row_5,
+        text = "",
+        font = (font, 12),
+        width = 5,
+        height = 4,
+        fg = foreground,
+        bg = highlight,
+        activebackground = shift_color(highlight, True),
+        command = lambda: run_benchmark(4)
+    ).pack(
+        side = tkinter.LEFT
+    )
+
     # Footer Frame
 
     tkinter.Text(
@@ -249,6 +522,10 @@ def check_exit_flag():
     if exit_flag:
         sys.exit()
 
+def run_benchmark(benchmark_num):
+
+    pass
+
 # Info Window Functions
 
 def open_window_info():
@@ -261,13 +538,44 @@ def open_window_settings():
 
     pass
 
+# Settings Functions
+
+def change_setting(setting, value):
+
+    global test_count
+    global test_size
+    global test_data
+    global test_path
+
+    global profile
+    global mix
+
+    global background
+    global foreground
+    global highlight
+    global bg_image
+    global font
+
+    global unit
+    global language
+
+    with open(PATH_DATA + "/settings.txt", "r+") as file:
+        settings_raw = file.read()
+        settings_raw = settings_raw.replace(
+            f"{setting}: {globals()[setting]}", f"{setting}: {value}"
+        )
+        file.seek(0)
+        file.write(settings_raw)
+
+    globals()[setting] = value
+
 # File Header Command Functions
 
 def run_file_command(file_var):
 
     command_names = ["Copy", "Save Text", "Save Image", "Exit"]
     command_functions = [copy_text, save_text, save_image, exit_program]
-    
+
     command_functions[command_names.index(file_var.get())]()
     file_var.set("File")
 
@@ -354,6 +662,29 @@ def exit_program():
     exit_flag = True
     window_home.destroy()
 
+# Other Functions
+
+def shift_color(color, lighten, amount = 30):
+
+    color = color.lstrip("#")
+    r, g, b = int(color[0:2], 16), int(color[2:4], 16), int(color[4:6], 16)
+
+    if r < amount and g < amount and b < amount:
+        lighten = True
+    elif r > 255 - amount and g > 255 - amount and b > 255 - amount:
+        lighten = False
+
+    if lighten:
+        r = min(255, r + amount)
+        g = min(255, g + amount)
+        b = min(255, b + amount)
+    else:
+        r = max(0, r - amount)
+        g = max(0, g - amount)
+        b = max(0, b - amount)
+
+    return f"#{r:02x}{g:02x}{b:02x}"
+
 
 # Main Function
 
@@ -377,7 +708,7 @@ def main():
     global test_path
 
     global profile
-    global rw
+    global mix
 
     global background
     global foreground
@@ -389,7 +720,7 @@ def main():
     global language
 
     # Result Variables
-    
+
     global results_read
     global results_write
     global results_mixed
@@ -438,7 +769,7 @@ def main():
     test_path = settings_raw[4].replace("test_path: ", "")
 
     profile = settings_raw[7].replace("profile: ", "")
-    rw = settings_raw[8].replace("rw: ", "")
+    mix = (settings_raw[8].replace("mix: ", "") == "True")
 
     background = settings_raw[11].replace("background: ", "")
     foreground = settings_raw[12].replace("foreground: ", "")
@@ -451,17 +782,10 @@ def main():
 
     # Results
 
-    if ("r" in rw):
-        results_read = [0, 0, 0, 0]
-    else:
-        results_read = None
+    results_read = [0, 0, 0, 0]
+    results_write = [0, 0, 0, 0]
 
-    if ("w" in rw):
-        results_write = [0, 0, 0, 0]
-    else:
-        results_write = None
-
-    if ("m" in rw):
+    if mix:
         results_mixed = [0, 0, 0, 0]
     else:
         results_mixed = None
