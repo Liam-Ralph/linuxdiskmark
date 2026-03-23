@@ -337,7 +337,47 @@ def open_window_home(open_settings = False):
         padx = 1
     )
 
-    # placeholder for test path
+    partitions_raw = subprocess.run(
+        "lsblk -o LABEL,MOUNTPOINT,FSUSE% -nr",
+        shell = True,
+        capture_output = True,
+        text = True
+    ).stdout.strip().split("\n")
+
+    partition_names = []
+    partition_paths = []
+
+    for partition_raw in partitions_raw:
+        partition = partition_raw.split(" ")
+        if len(partition) == 3 and "/" in partition[1] and "/boot" not in partition[1]:
+            name = partition[0].replace("\\x20", " ")
+            used = int(partition[2][:-1])
+            partition_names.append(f"{name}: {used}%")
+            path = partition[1].replace("\\x20", " ")
+            partition_paths.append(path)
+
+    if test_path in partition_paths:
+        init_val = partition_names[partition_paths.index(test_path)]
+    else:
+        init_val = test_path
+
+    test_path_var = tkinter.StringVar(value = init_val)
+    test_path_options = partition_names + ["Choose Folder"]
+    tkinter.OptionMenu(
+        frame_row_1_1,
+        test_path_var,
+        *test_path_options,
+        command = lambda event: change_setting(
+            "test_path",
+            partition_paths[partition_names.index(test_path_var.get())]
+            if test_path_var.get() in partition_names else tkinter.filedialog.askdirectory(
+                parent = window_home
+            )
+        ) # check if CrystalDiskMark changes "Choose Folder", this doesn't rn
+    ).pack(
+        side = tkinter.LEFT,
+        padx = 1
+    )
 
     unit_var = tkinter.StringVar(value = unit)
     unit_options = ["MB/s", "GB/s"]
