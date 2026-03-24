@@ -363,17 +363,26 @@ def open_window_home(open_settings = False):
 
     test_path_var = tkinter.StringVar(value = init_val)
     test_path_options = partition_names + ["Choose Folder"]
+
+    def test_path_command(event):
+        if test_path_var.get() in partition_names:
+            partition_name = test_path_var.get()
+            setting_value = partition_paths[partition_names.index(partition_name)]
+            test_path_var.set(
+                partition_name if len(partition_name) <= 23 else partition_name[:20] + "..."
+            )
+        else:
+            setting_value = tkinter.filedialog.askdirectory(parent = window_home)
+            test_path_var.set(
+                setting_value if len(setting_value) <= 23 else setting_value[-20:] + "..."
+            )
+        change_setting("test_path", setting_value)
+
     tkinter.OptionMenu(
         frame_row_1_1,
         test_path_var,
         *test_path_options,
-        command = lambda event: change_setting(
-            "test_path",
-            partition_paths[partition_names.index(test_path_var.get())]
-            if test_path_var.get() in partition_names else tkinter.filedialog.askdirectory(
-                parent = window_home
-            )
-        ) # check if CrystalDiskMark changes "Choose Folder", this doesn't rn
+        command = test_path_command
     ).pack(
         side = tkinter.LEFT,
         padx = 1
