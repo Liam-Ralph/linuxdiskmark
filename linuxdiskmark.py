@@ -389,7 +389,7 @@ def open_window_home(open_settings = False):
     )
 
     unit_var = tkinter.StringVar(value = unit)
-    unit_options = ["MB/s", "GB/s"]
+    unit_options = ["MB/s", "GB/s", "IOPS", "μs"]
     tkinter.OptionMenu(
         frame_row_1_1,
         unit_var,
