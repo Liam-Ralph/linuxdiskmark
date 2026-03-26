@@ -817,7 +817,7 @@ def main():
 
     # Info and Settings Reading
 
-    with open(PATH_DATA + "info.txt", "r") as file:
+    with open(PATH_DATA + "info.json", "r") as file:
         info_raw = json.load(file)
     names = info_raw["names"]
     created = info_raw["created"]
@@ -834,6 +834,15 @@ def main():
 
     profile = settings_raw["profile"]
     mix = settings_raw["mix"]
+
+    background = settings_raw["background"]
+    foreground = settings_raw["foreground"]
+    highlight = settings_raw["highlight"]
+    bg_image = settings_raw["bg_image"]
+    font = settings_raw["font"]
+
+    unit = settings_raw["unit"]
+    language = settings_raw["language"]
 
     with open(PATH_DATA + "profiles.json", "r") as file:
         profiles_raw = json.load(file)
@@ -867,7 +876,7 @@ def main():
         tests_raw = profiles_raw[hardware_names[i]]
         for ii in range(4):
             tests = tests_raw[profile_names_lower[ii]]
-            for test in tests:
+            for test in tests.values():
                 profiles[hardware_names[i]][profile_names[ii]].append(
                     Test(
                         test["type"],
