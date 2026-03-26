@@ -36,6 +36,7 @@ import sys
 # Other
 
 import datetime
+import json
 import keyboard
 import threading
 
@@ -49,6 +50,17 @@ global PATH_DOC
 PATH_DATA = "/usr/share/linuxdiskmark/data"
 PATH_LOGO = "/usr/share/linuxdiskmark/logo.png"
 PATH_DOC = "/usr/share/doc/linuxdiskmark"
+
+
+# Classes
+
+class Test:
+    def __init__(self, type, random, block_size, queues, threads):
+        self.type = type
+        self.random = random
+        self.block_size = block_size
+        self.queues = queues
+        self.threads = threads
 
 
 # Home Window Functions
@@ -83,6 +95,8 @@ def open_window_home(open_settings = False):
     global highlight
     global bg_image
     global font
+
+    global profiles
 
     # Result Variables
 
@@ -608,10 +622,10 @@ def change_setting(setting, value):
     global unit
     global language
 
-    with open(PATH_DATA + "/settings.txt", "r+") as file:
+    with open(PATH_DATA + "/settings.json", "r+") as file:
         settings_raw = file.read()
         settings_raw = settings_raw.replace(
-            f"{setting}: {globals()[setting]}", f"{setting}: {value}"
+            f"\"{setting}:\" {globals()[setting]}", f"{setting}: {value}"
         )
         file.seek(0)
         file.write(settings_raw)
@@ -768,6 +782,8 @@ def main():
     global unit
     global language
 
+    global profiles
+
     # Result Variables
 
     global results_read
@@ -803,31 +819,62 @@ def main():
     # Info and Settings Reading
 
     with open(PATH_DATA + "/info.txt", "r") as file:
-        info_raw = file.read().split("\n")
-    names = info_raw[0].replace("Names: ", "")
-    created = info_raw[1].replace("Created: ", "")
-    version = info_raw[2].replace("Version: ", "")
-    updated = info_raw[3].replace("Updated: ", "")
+        info_raw = json.load(file)
+    names = info_raw["names"]
+    created = info_raw["created"]
+    version = info_raw["version"]
+    updated = info_raw["updated"]
 
     with open(PATH_DATA + "/settings.txt", "r") as file:
-        settings_raw = file.read().split("\n")
+        settings_raw = json.load(file)
 
-    test_count = int(settings_raw[1].replace("test_count: ", ""))
-    test_size = settings_raw[2].replace("test_size: ", "")
-    test_data = settings_raw[3].replace("test_data: ", "")
-    test_path = settings_raw[4].replace("test_path: ", "")
+    test_count = settings_raw["test_settings"]["test_count"]
+    test_size = settings_raw["test_settings"]["test_size"]
+    test_data = settings_raw["test_settings"]["test_data"]
+    test_path = settings_raw["test_settings"]["test_path"]
 
-    profile = settings_raw[7].replace("profile: ", "")
-    mix = (settings_raw[8].replace("mix: ", "") == "True")
+    profile = settings_raw["profile_settings"]["profile"]
+    mix = settings_raw["profile_settings"]["mix"]
 
-    background = settings_raw[11].replace("background: ", "")
-    foreground = settings_raw[12].replace("foreground: ", "")
-    highlight = settings_raw[13].replace("highlight: ", "")
-    bg_image = settings_raw[14].replace("bg_image: ", "")
-    font = settings_raw[15].replace("font: ", "")
+    profiles = {
+        "default": {
+            "Default": [],
+            "Peak Performance": [],
+            "Real World Performance": [],
+            "Demo": []
+        },
+        "nvme_ssd": {
+            "Default": [],
+            "Peak Performance": [],
+            "Real World Performance": [],
+            "Demo": []
+        },
+        "flash_memory": {
+            "Default": [],
+            "Peak Performance": [],
+            "Real World Performance": [],
+            "Demo": []
+        }
+    }
 
-    unit = settings_raw[18].replace("unit: ", "")
-    language = settings_raw[19].replace("language: ", "")
+    hardware_names = ["default", "nvme_ssd", "flash_memory"]
+    profile_names = ["Default", "Peak Performance", "Real World Performance", "Demo"]
+    profile_names_lower = ["default", "peak_performance", "real_world_performance", "demo"]
+
+    for i in range(3):
+        tests_raw = settings_raw["profiles"][hardware_names[i]]
+        for ii in range(4):
+            tests = tests_raw[profile_names_lower[ii]]
+            for test in tests:
+                profiles[hardware_names[i]][profile_names[ii]].append(
+                    Test(
+                        test["type"],
+                        test["random"],
+                        test["block_size"],
+                        test["queues"],
+                        test["threads"]
+                    )
+                )
 
     # Results
 

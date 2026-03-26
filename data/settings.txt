@@ -5,7 +5,7 @@ test_data: default
 test_path: /
 
 Profile Settings
-profile: default
+profile: random
 mix: False
 
 Theme Settings

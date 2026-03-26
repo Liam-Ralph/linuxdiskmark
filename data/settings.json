@@ -3,7 +3,7 @@
     "test_settings": {
         "test_count": 3,
         "test_size": "1GiB",
-        "test_data": "default",
+        "test_data": "random",
         "test_path": "/"
     },
 
