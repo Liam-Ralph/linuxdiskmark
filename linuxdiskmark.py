@@ -47,9 +47,9 @@ global PATH_DATA
 global PATH_LOGO
 global PATH_DOC
 
-PATH_DATA = "/usr/share/linuxdiskmark/data"
+PATH_DATA = "/usr/share/linuxdiskmark/data/"
 PATH_LOGO = "/usr/share/linuxdiskmark/logo.png"
-PATH_DOC = "/usr/share/doc/linuxdiskmark"
+PATH_DOC = "/usr/share/doc/linuxdiskmark/"
 
 
 # Classes
@@ -622,13 +622,12 @@ def change_setting(setting, value):
     global unit
     global language
 
-    with open(PATH_DATA + "/settings.json", "r+") as file:
-        settings_raw = file.read()
-        settings_raw = settings_raw.replace(
-            f"\"{setting}:\" {globals()[setting]}", f"{setting}: {value}"
-        )
+    with open(PATH_DATA + "settings.json", "r+") as file:
+        settings_raw = json.load(file)
+        settings_raw[setting] = value
         file.seek(0)
-        file.write(settings_raw)
+        json.dump(settings_raw, file, indent = 4)
+        file.truncate()
 
     globals()[setting] = value
 
@@ -818,23 +817,26 @@ def main():
 
     # Info and Settings Reading
 
-    with open(PATH_DATA + "/info.txt", "r") as file:
+    with open(PATH_DATA + "info.txt", "r") as file:
         info_raw = json.load(file)
     names = info_raw["names"]
     created = info_raw["created"]
     version = info_raw["version"]
     updated = info_raw["updated"]
 
-    with open(PATH_DATA + "/settings.txt", "r") as file:
+    with open(PATH_DATA + "settings.json", "r") as file:
         settings_raw = json.load(file)
 
-    test_count = settings_raw["test_settings"]["test_count"]
-    test_size = settings_raw["test_settings"]["test_size"]
-    test_data = settings_raw["test_settings"]["test_data"]
-    test_path = settings_raw["test_settings"]["test_path"]
+    test_count = settings_raw["test_count"]
+    test_size = settings_raw["test_size"]
+    test_data = settings_raw["test_data"]
+    test_path = settings_raw["test_path"]
 
-    profile = settings_raw["profile_settings"]["profile"]
-    mix = settings_raw["profile_settings"]["mix"]
+    profile = settings_raw["profile"]
+    mix = settings_raw["mix"]
+
+    with open(PATH_DATA + "profiles.json", "r") as file:
+        profiles_raw = json.load(file)
 
     profiles = {
         "default": {
@@ -862,7 +864,7 @@ def main():
     profile_names_lower = ["default", "peak_performance", "real_world_performance", "demo"]
 
     for i in range(3):
-        tests_raw = settings_raw["profiles"][hardware_names[i]]
+        tests_raw = profiles_raw[hardware_names[i]]
         for ii in range(4):
             tests = tests_raw[profile_names_lower[ii]]
             for test in tests:

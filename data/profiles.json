@@ -1,0 +1,315 @@
+{
+
+    "default": {
+        "default": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test3": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 1
+            },
+            "test4": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            }
+        },
+        "peak_performance": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 1
+            },
+            "test3": {
+                "type": "IOPS",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 1
+            },
+            "test4": {
+                "type": "us",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 1
+            }
+        },
+        "real_world_performance": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test3": {
+                "type": "IOPS",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test4": {
+                "type": "us",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            }
+        },
+        "demo": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            }
+        },
+        "measure_time": 5,
+        "interval_time": 5
+    },
+
+    "nvme_ssd": {
+        "default": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "128KiB",
+                "queues": 32,
+                "threads": 1
+            },
+            "test3": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 16
+            },
+            "test4": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            }
+        },
+        "peak_performance": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 16
+            },
+            "test3": {
+                "type": "IOPS",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 16
+            },
+            "test4": {
+                "type": "us",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 16
+            }
+        },
+        "real_world_performance": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test3": {
+                "type": "IOPS",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test4": {
+                "type": "us",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            }
+        },
+        "demo": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            }
+        },
+        "measure_time": 5,
+        "interval_time": 5
+    },
+
+    "flash_memory": {
+        "default": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test3": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 1
+            },
+            "test4": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            }
+        },
+        "peak_performance": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 1
+            },
+            "test3": {
+                "type": "IOPS",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 1
+            },
+            "test4": {
+                "type": "us",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 32,
+                "threads": 1
+            }
+        },
+        "real_world_performance": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test2": {
+                "type": "MB/s",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test3": {
+                "type": "IOPS",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            },
+            "test4": {
+                "type": "us",
+                "random": true,
+                "block_size": "4KiB",
+                "queues": 1,
+                "threads": 1
+            }
+        },
+        "demo": {
+            "test1": {
+                "type": "MB/s",
+                "random": false,
+                "block_size": "1MiB",
+                "queues": 8,
+                "threads": 1
+            }
+        },
+        "measure_time": 1,
+        "interval_time": 30
+    }
+
+}
