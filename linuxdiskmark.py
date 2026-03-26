@@ -88,6 +88,7 @@ def open_window_home(open_settings = False):
     global test_path
 
     global profile
+    global hardware
     global mix
 
     global background
@@ -770,6 +771,7 @@ def main():
     global test_path
 
     global profile
+    global hardware
     global mix
 
     global background
@@ -833,6 +835,7 @@ def main():
     test_path = settings_raw["test_path"]
 
     profile = settings_raw["profile"]
+    hardware = settings_raw["hardware"]
     mix = settings_raw["mix"]
 
     background = settings_raw["background"]

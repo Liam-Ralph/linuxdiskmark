@@ -6,6 +6,7 @@
     "test_path": "/",
 
     "profile": "default",
+    "hardware": "default",
     "mix": false,
 
     "background": "#FFFFFF",
