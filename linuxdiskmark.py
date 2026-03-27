@@ -87,8 +87,8 @@ def open_window_home(open_settings = False):
     global test_size
     global test_path
 
-    global profile
     global hardware
+    global profile
     global mix
 
     global background
@@ -247,41 +247,43 @@ def open_window_home(open_settings = False):
         pady = 1
     )
 
-    frame_row_3 = tkinter.Frame(
-        frame_main,
-        width = window_width,
-        height = 50,
-        bg = background
-    )
-    frame_row_3.pack_propagate(False)
-    frame_row_3.pack(
-        padx = 5,
-        pady = 1
-    )
+    if profile != "demo":
 
-    frame_row_4 = tkinter.Frame(
-        frame_main,
-        width = window_width,
-        height = 50,
-        bg = background
-    )
-    frame_row_4.pack_propagate(False)
-    frame_row_4.pack(
-        padx = 5,
-        pady = 1
-    )
+        frame_row_3 = tkinter.Frame(
+            frame_main,
+            width = window_width,
+            height = 50,
+            bg = background
+        )
+        frame_row_3.pack_propagate(False)
+        frame_row_3.pack(
+            padx = 5,
+            pady = 1
+        )
 
-    frame_row_5 = tkinter.Frame(
-        frame_main,
-        width = window_width,
-        height = 50,
-        bg = background
-    )
-    frame_row_5.pack_propagate(False)
-    frame_row_5.pack(
-        padx = 5,
-        pady = 1
-    )
+        frame_row_4 = tkinter.Frame(
+            frame_main,
+            width = window_width,
+            height = 50,
+            bg = background
+        )
+        frame_row_4.pack_propagate(False)
+        frame_row_4.pack(
+            padx = 5,
+            pady = 1
+        )
+
+        frame_row_5 = tkinter.Frame(
+            frame_main,
+            width = window_width,
+            height = 50,
+            bg = background
+        )
+        frame_row_5.pack_propagate(False)
+        frame_row_5.pack(
+            padx = 5,
+            pady = 1
+        )
 
     # Main Frame - Row 1
 
@@ -415,133 +417,200 @@ def open_window_home(open_settings = False):
         padx = 1
     )
 
-    # Main Frame - Row 1-2
+    if profile != "demo":
 
-    frame_row_1_2_col_1 = tkinter.Frame(
-        frame_row_1_2,
-        width = 180,
-        height = 25,
-        bg = background
-    )
-    frame_row_1_2_col_1.pack_propagate(False)
-    frame_row_1_2_col_1.pack(
-        side = tkinter.LEFT,
-        padx = 1
-    )
+        # Main Frame - Row 1-2
 
-    tkinter.Label(
-        frame_row_1_2_col_1,
-        text = f"Read ({unit})",
-        font = (font, 12),
-        bg = background,
-        fg = foreground
-    ).pack()
-
-    frame_row_1_2_col_2 = tkinter.Frame(
-        frame_row_1_2,
-        width = 180,
-        height = 25,
-        bg = background
-    )
-    frame_row_1_2_col_2.pack_propagate(False)
-    frame_row_1_2_col_2.pack(
-        side = tkinter.LEFT,
-        padx = 1
-    )
-
-    tkinter.Label(
-        frame_row_1_2_col_2,
-        text = f"Write ({unit})",
-        font = (font, 12),
-        bg = background,
-        fg = foreground
-    ).pack()
-
-    if mix:
-
-        frame_row_1_2_col_3 = tkinter.Frame(
+        frame_row_1_2_col_1 = tkinter.Frame(
             frame_row_1_2,
             width = 180,
             height = 25,
             bg = background
         )
-        frame_row_1_2_col_3.pack_propagate(False)
-        frame_row_1_2_col_3.pack(
+        frame_row_1_2_col_1.pack_propagate(False)
+        frame_row_1_2_col_1.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        frame_row_1_2_col_2 = tkinter.Frame(
+            frame_row_1_2,
+            width = 180,
+            height = 25,
+            bg = background
+        )
+        frame_row_1_2_col_2.pack_propagate(False)
+        frame_row_1_2_col_2.pack(
             side = tkinter.LEFT,
             padx = 1
         )
 
         tkinter.Label(
-            frame_row_1_2_col_3,
-            text = f"Mix ({unit})",
+            frame_row_1_2_col_1,
+            text = f"Read ({unit})",
             font = (font, 12),
             bg = background,
             fg = foreground
         ).pack()
 
-    # Main Frame - Row 2
+        tkinter.Label(
+            frame_row_1_2_col_2,
+            text = f"Write ({unit})",
+            font = (font, 12),
+            bg = background,
+            fg = foreground
+        ).pack()
 
-    tkinter.Button(
-        frame_row_2,
-        text = "",
-        font = (font, 12),
-        width = 5,
-        height = 4,
-        fg = foreground,
-        bg = highlight,
-        activebackground = shift_color(highlight, True),
-        command = lambda: run_benchmark(1)
-    ).pack(
-        side = tkinter.LEFT
-    )
+        if mix:
 
-    # Main Frame - Row 3
+            frame_row_1_2_col_3 = tkinter.Frame(
+                frame_row_1_2,
+                width = 180,
+                height = 25,
+                bg = background
+            )
+            frame_row_1_2_col_3.pack_propagate(False)
+            frame_row_1_2_col_3.pack(
+                side = tkinter.LEFT,
+                padx = 1
+            )
 
-    tkinter.Button(
-        frame_row_3,
-        text = "",
-        font = (font, 12),
-        width = 5,
-        height = 4,
-        fg = foreground,
-        bg = highlight,
-        activebackground = shift_color(highlight, True),
-        command = lambda: run_benchmark(2)
-    ).pack(
-        side = tkinter.LEFT
-    )
+            tkinter.Label(
+                frame_row_1_2_col_3,
+                text = f"Mix ({unit})",
+                font = (font, 12),
+                bg = background,
+                fg = foreground
+            ).pack()
 
-    # Main Frame - Row 4
+        # Main Frame - Row 2
 
-    tkinter.Button(
-        frame_row_4,
-        text = "",
-        font = (font, 12),
-        width = 5,
-        height = 4,
-        fg = foreground,
-        bg = highlight,
-        activebackground = shift_color(highlight, True),
-        command = lambda: run_benchmark(3)
-    ).pack(
-        side = tkinter.LEFT
-    )
+        tkinter.Button(
+            frame_row_2,
+            text = "",
+            font = (font, 12),
+            width = 5,
+            height = 4,
+            fg = foreground,
+            bg = highlight,
+            activebackground = shift_color(highlight, True),
+            command = lambda: run_benchmark(1)
+        ).pack(
+            side = tkinter.LEFT
+        )
 
-    # Main Frame - Row 5
+        # Main Frame - Row 3
 
-    tkinter.Button(
-        frame_row_5,
-        text = "",
-        font = (font, 12),
-        width = 5,
-        height = 4,
-        fg = foreground,
-        bg = highlight,
-        activebackground = shift_color(highlight, True),
-        command = lambda: run_benchmark(4)
-    ).pack(
-        side = tkinter.LEFT
-    )
+        tkinter.Button(
+            frame_row_3,
+            text = "",
+            font = (font, 12),
+            width = 5,
+            height = 4,
+            fg = foreground,
+            bg = highlight,
+            activebackground = shift_color(highlight, True),
+            command = lambda: run_benchmark(2)
+        ).pack(
+            side = tkinter.LEFT
+        )
+
+        # Main Frame - Row 4
+
+        tkinter.Button(
+            frame_row_4,
+            text = "",
+            font = (font, 12),
+            width = 5,
+            height = 4,
+            fg = foreground,
+            bg = highlight,
+            activebackground = shift_color(highlight, True),
+            command = lambda: run_benchmark(3)
+        ).pack(
+            side = tkinter.LEFT
+        )
+
+        # Main Frame - Row 5
+
+        tkinter.Button(
+            frame_row_5,
+            text = "",
+            font = (font, 12),
+            width = 5,
+            height = 4,
+            fg = foreground,
+            bg = highlight,
+            activebackground = shift_color(highlight, True),
+            command = lambda: run_benchmark(4)
+        ).pack(
+            side = tkinter.LEFT
+        )
+
+    else:
+
+        # Main Frame - Row 1-2
+
+        demo_test = profiles[hardware][profile][0]
+
+        tkinter.Label(
+            frame_row_1_2,
+            text = (
+                f"{"RND" if demo_test.random else "SEQ"} {demo_test.block_size}, " +
+                f"Q={demo_test.queues}, T={demo_test.threads}" # e.g. SEQ 1MiB, Q=8, T=1
+            ),
+            font = (font, 12),
+            bg = background,
+            fg = foreground
+        ).pack()
+
+        # Main Frame - Row 2
+
+        frame_row_2_col_1 = tkinter.Frame(
+            frame_row_2,
+            width = 180,
+            height = 50,
+            bd = 1,
+            bg = background
+        )
+        frame_row_2_col_1.pack_propagate(False)
+        frame_row_2_col_1.pack(
+            side = tkinter.LEFT,
+            padx = 3
+        )
+
+        tkinter.Label(
+            frame_row_2_col_1,
+            text = "Read",
+            font = (font, 12),
+            bg = background,
+            fg = foreground
+        ).pack(
+            side = tkinter.LEFT
+        )
+
+        frame_row_2_col_2 = tkinter.Frame(
+            frame_row_2,
+            width = 180,
+            height = 50,
+            bd = 1,
+            bg = background
+        )
+        frame_row_2_col_2.pack_propagate(False)
+        frame_row_2_col_2.pack(
+            side = tkinter.LEFT,
+            padx = 3
+        )
+
+        tkinter.Label(
+            frame_row_2_col_2,
+            text = "Write",
+            font = (font, 12),
+            bg = background,
+            fg = foreground
+        ).pack(
+            side = tkinter.LEFT
+        )
 
     # Footer Frame
 
@@ -770,8 +839,8 @@ def main():
     global test_data
     global test_path
 
-    global profile
     global hardware
+    global profile
     global mix
 
     global background
@@ -834,8 +903,8 @@ def main():
     test_data = settings_raw["test_data"]
     test_path = settings_raw["test_path"]
 
-    profile = settings_raw["profile"]
     hardware = settings_raw["hardware"]
+    profile = settings_raw["profile"]
     mix = settings_raw["mix"]
 
     background = settings_raw["background"]
@@ -852,33 +921,32 @@ def main():
 
     profiles = {
         "default": {
-            "Default": [],
-            "Peak Performance": [],
-            "Real World Performance": [],
-            "Demo": []
+            "default": [],
+            "peak_performance": [],
+            "real_world_performance": [],
+            "demo": []
         },
         "nvme_ssd": {
-            "Default": [],
-            "Peak Performance": [],
-            "Real World Performance": [],
-            "Demo": []
+            "default": [],
+            "peak_performance": [],
+            "real_world_performance": [],
+            "demo": []
         },
         "flash_memory": {
-            "Default": [],
-            "Peak Performance": [],
-            "Real World Performance": [],
-            "Demo": []
+            "default": [],
+            "peak_performance": [],
+            "real_world_performance": [],
+            "demo": []
         }
     }
 
     hardware_names = ["default", "nvme_ssd", "flash_memory"]
-    profile_names = ["Default", "Peak Performance", "Real World Performance", "Demo"]
-    profile_names_lower = ["default", "peak_performance", "real_world_performance", "demo"]
+    profile_names = ["default", "peak_performance", "real_world_performance", "demo"]
 
     for i in range(3):
         tests_raw = profiles_raw[hardware_names[i]]
         for ii in range(4):
-            tests = tests_raw[profile_names_lower[ii]]
+            tests = tests_raw[profile_names[ii]]
             for test in tests.values():
                 profiles[hardware_names[i]][profile_names[ii]].append(
                     Test(

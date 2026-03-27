@@ -5,8 +5,8 @@
     "test_data": "random",
     "test_path": "/",
 
-    "profile": "default",
     "hardware": "default",
+    "profile": "default",
     "mix": false,
 
     "background": "#FFFFFF",
