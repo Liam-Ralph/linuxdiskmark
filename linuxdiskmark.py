@@ -103,7 +103,7 @@ def open_window_home(open_settings = False):
 
     global results_read
     global results_write
-    global results_mixed
+    global results_mix
     global results_labels
 
     # Global Buttons
@@ -486,9 +486,14 @@ def open_window_home(open_settings = False):
 
         # Main Frame - Row 2
 
+        test = profiles[hardware][profile][0]
+
         tkinter.Button(
             frame_row_2,
-            text = "",
+            text = (
+                ("RND" if test.random else "SEQ") + test.block_size.replace("iB", "") + "\n" +
+                f"Q{test.queues}T{test.threads}"
+            ),
             font = (font, 12),
             width = 5,
             height = 4,
@@ -500,11 +505,99 @@ def open_window_home(open_settings = False):
             side = tkinter.LEFT
         )
 
+        frame_row_2_col_1 = tkinter.Frame(
+            frame_row_2,
+            width = 180,
+            height = 50,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+        frame_row_2_col_1.pack_propagate(False)
+        frame_row_2_col_1.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        results_labels[0].append(
+            tkinter.Label(
+                frame_row_2_col_1,
+                text = f"{results_read[0]:.2f}",
+                font = (font, 32),
+                bg = background,
+                fg = foreground
+            )
+        )
+        results_labels[0][0].pack(
+            side = tkinter.RIGHT
+        )
+
+        frame_row_2_col_2 = tkinter.Frame(
+            frame_row_2,
+            width = 180,
+            height = 50,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+        frame_row_2_col_2.pack_propagate(False)
+        frame_row_2_col_2.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        results_labels[0].append(
+            tkinter.Label(
+                frame_row_2_col_2,
+                text = f"{results_write[0]:.2f}",
+                font = (font, 32),
+                bg = background,
+                fg = foreground
+            )
+        )
+        results_labels[0][1].pack(
+            side = tkinter.RIGHT
+        )
+
+        if mix:
+
+            frame_row_2_col_3 = tkinter.Frame(
+                frame_row_2,
+                width = 180,
+                height = 50,
+                bd = 1,
+                relief = tkinter.SOLID,
+                bg = background
+            )
+            frame_row_2_col_3.pack_propagate(False)
+            frame_row_2_col_3.pack(
+                side = tkinter.LEFT,
+                padx = 1
+            )
+
+            results_labels[0].append(
+                tkinter.Label(
+                    frame_row_2_col_3,
+                    text = results_mix[0],
+                    font = (font, 32),
+                    bg = background,
+                    fg = foreground
+                )
+            )
+            results_labels[0][2].pack(
+                side = tkinter.RIGHT
+            )
+
         # Main Frame - Row 3
+
+        test = profiles[hardware][profile][1]
 
         tkinter.Button(
             frame_row_3,
-            text = "",
+            text = (
+                ("RND" if test.random else "SEQ") + test.block_size.replace("iB", "") + "\n" +
+                f"Q{test.queues}T{test.threads}"
+            ),
             font = (font, 12),
             width = 5,
             height = 4,
@@ -516,11 +609,99 @@ def open_window_home(open_settings = False):
             side = tkinter.LEFT
         )
 
+        frame_row_3_col_1 = tkinter.Frame(
+            frame_row_3,
+            width = 180,
+            height = 50,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+        frame_row_3_col_1.pack_propagate(False)
+        frame_row_3_col_1.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        results_labels[1].append(
+            tkinter.Label(
+                frame_row_3_col_1,
+                text = f"{results_read[1]:.2f}",
+                font = (font, 32),
+                bg = background,
+                fg = foreground
+            )
+        )
+        results_labels[1][0].pack(
+            side = tkinter.RIGHT
+        )
+
+        frame_row_3_col_2 = tkinter.Frame(
+            frame_row_3,
+            width = 180,
+            height = 50,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+        frame_row_3_col_2.pack_propagate(False)
+        frame_row_3_col_2.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        results_labels[1].append(
+            tkinter.Label(
+                frame_row_3_col_2,
+                text = f"{results_write[1]:.2f}",
+                font = (font, 32),
+                bg = background,
+                fg = foreground
+            )
+        )
+        results_labels[1][1].pack(
+            side = tkinter.RIGHT
+        )
+
+        if mix:
+
+            frame_row_3_col_3 = tkinter.Frame(
+                frame_row_3,
+                width = 180,
+                height = 50,
+                bd = 1,
+                relief = tkinter.SOLID,
+                bg = background
+            )
+            frame_row_3_col_3.pack_propagate(False)
+            frame_row_3_col_3.pack(
+                side = tkinter.LEFT,
+                padx = 1
+            )
+
+            results_labels[1].append(
+                tkinter.Label(
+                    frame_row_3_col_3,
+                    text = results_mix[1],
+                    font = (font, 32),
+                    bg = background,
+                    fg = foreground
+                )
+            )
+            results_labels[1][2].pack(
+                side = tkinter.RIGHT
+            )
+
         # Main Frame - Row 4
+
+        test = profiles[hardware][profile][2]
 
         tkinter.Button(
             frame_row_4,
-            text = "",
+            text = (
+                ("RND" if test.random else "SEQ") + test.block_size.replace("iB", "") + "\n" +
+                f"Q{test.queues}T{test.threads}"
+            ),
             font = (font, 12),
             width = 5,
             height = 4,
@@ -532,11 +713,99 @@ def open_window_home(open_settings = False):
             side = tkinter.LEFT
         )
 
+        frame_row_4_col_1 = tkinter.Frame(
+            frame_row_4,
+            width = 180,
+            height = 50,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+        frame_row_4_col_1.pack_propagate(False)
+        frame_row_4_col_1.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        results_labels[2].append(
+            tkinter.Label(
+                frame_row_4_col_1,
+                text = f"{results_read[2]:.2f}",
+                font = (font, 32),
+                bg = background,
+                fg = foreground
+            )
+        )
+        results_labels[2][0].pack(
+            side = tkinter.RIGHT
+        )
+
+        frame_row_4_col_2 = tkinter.Frame(
+            frame_row_4,
+            width = 180,
+            height = 50,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+        frame_row_4_col_2.pack_propagate(False)
+        frame_row_4_col_2.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        results_labels[2].append(
+            tkinter.Label(
+                frame_row_4_col_2,
+                text = f"{results_write[2]:.2f}",
+                font = (font, 32),
+                bg = background,
+                fg = foreground
+            )
+        )
+        results_labels[2][1].pack(
+            side = tkinter.RIGHT
+        )
+
+        if mix:
+
+            frame_row_4_col_3 = tkinter.Frame(
+                frame_row_4,
+                width = 180,
+                height = 50,
+                bd = 1,
+                relief = tkinter.SOLID,
+                bg = background
+            )
+            frame_row_4_col_3.pack_propagate(False)
+            frame_row_4_col_3.pack(
+                side = tkinter.LEFT,
+                padx = 1
+            )
+
+            results_labels[2].append(
+                tkinter.Label(
+                    frame_row_4_col_3,
+                    text = results_mix[2],
+                    font = (font, 32),
+                    bg = background,
+                    fg = foreground
+                )
+            )
+            results_labels[2][2].pack(
+                side = tkinter.RIGHT
+            )
+
         # Main Frame - Row 5
+
+        test = profiles[hardware][profile][3]
 
         tkinter.Button(
             frame_row_5,
-            text = "",
+            text = (
+                ("RND" if test.random else "SEQ") + test.block_size.replace("iB", "") + "\n" +
+                f"Q{test.queues}T{test.threads}"
+            ),
             font = (font, 12),
             width = 5,
             height = 4,
@@ -547,6 +816,89 @@ def open_window_home(open_settings = False):
         ).pack(
             side = tkinter.LEFT
         )
+
+        frame_row_5_col_1 = tkinter.Frame(
+            frame_row_5,
+            width = 180,
+            height = 50,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+        frame_row_5_col_1.pack_propagate(False)
+        frame_row_5_col_1.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        results_labels[3].append(
+            tkinter.Label(
+                frame_row_5_col_1,
+                text = f"{results_read[3]:.2f}",
+                font = (font, 32),
+                bg = background,
+                fg = foreground
+            )
+        )
+        results_labels[3][0].pack(
+            side = tkinter.RIGHT
+        )
+
+        frame_row_5_col_2 = tkinter.Frame(
+            frame_row_5,
+            width = 180,
+            height = 50,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+        frame_row_5_col_2.pack_propagate(False)
+        frame_row_5_col_2.pack(
+            side = tkinter.LEFT,
+            padx = 1
+        )
+
+        results_labels[3].append(
+            tkinter.Label(
+                frame_row_5_col_2,
+                text = f"{results_write[3]:.2f}",
+                font = (font, 32),
+                bg = background,
+                fg = foreground
+            )
+        )
+        results_labels[3][1].pack(
+            side = tkinter.RIGHT
+        )
+
+        if mix:
+
+            frame_row_5_col_3 = tkinter.Frame(
+                frame_row_5,
+                width = 180,
+                height = 50,
+                bd = 1,
+                relief = tkinter.SOLID,
+                bg = background
+            )
+            frame_row_5_col_3.pack_propagate(False)
+            frame_row_5_col_3.pack(
+                side = tkinter.LEFT,
+                padx = 1
+            )
+
+            results_labels[3].append(
+                tkinter.Label(
+                    frame_row_5_col_3,
+                    text = results_mix[3],
+                    font = (font, 32),
+                    bg = background,
+                    fg = foreground
+                )
+            )
+            results_labels[3][2].pack(
+                side = tkinter.RIGHT
+            )
 
     else:
 
@@ -613,7 +965,7 @@ def open_window_home(open_settings = False):
         results_labels[0].append(
             tkinter.Label(
                 frame_row_2_col_1,
-                text = "0.0",
+                text = f"{results_read[0]:.2f}",
                 font = (font, 32),
                 height = 4,
                 bg = background,
@@ -671,7 +1023,7 @@ def open_window_home(open_settings = False):
         results_labels[0].append(
             tkinter.Label(
                 frame_row_2_col_2,
-                text = "0.0",
+                text = f"{results_write[0]:.2f}",
                 font = (font, 32),
                 height = 4,
                 bg = background,
@@ -809,7 +1161,7 @@ def copy_text():
 
     global results_read
     global results_write
-    global results_mixed
+    global results_mix
 
     # Text Formatting
 
@@ -834,7 +1186,7 @@ def copy_text():
             "\n"
         )
 
-    if results_mixed is not None:
+    if results_mix is not None:
         text += (
             "[Mixed]\n" +
             "\n"
@@ -943,7 +1295,7 @@ def main():
 
     global results_read
     global results_write
-    global results_mixed
+    global results_mix
     global results_labels
 
     # Exit Flag
@@ -1050,9 +1402,9 @@ def main():
     results_write = [0, 0, 0, 0]
 
     if mix:
-        results_mixed = [0, 0, 0, 0]
+        results_mix = [0, 0, 0, 0]
     else:
-        results_mixed = None
+        results_mix = None
         results_labels = [[], []]
 
     if profile != "demo":
