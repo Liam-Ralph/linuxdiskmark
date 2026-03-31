@@ -224,6 +224,54 @@ def open_window_home(open_settings = False):
 
     # Main Frame
 
+    # Main Frame Widget Functions
+
+    def create_row(parent, half_size = False):
+        return tkinter.Frame(
+            parent,
+            width = window_width,
+            height = 50 if not half_size else 25,
+            bg = background
+        )
+
+    def create_test_button(parent, text, benchmark):
+        return tkinter.Button(
+            parent,
+            text = text,
+            font = (font, 12),
+            width = 5,
+            height = 4,
+            fg = foreground,
+            bg = highlight,
+            activebackground = shift_color(highlight, True),
+            command = lambda: run_benchmark(benchmark)
+        )
+
+    def create_result_frame(parent):
+        return tkinter.Frame(
+            parent,
+            width = 180,
+            height = 48,
+            bd = 1,
+            relief = tkinter.SOLID,
+            bg = background
+        )
+
+    def create_result_label(parent, text, row, column):
+        if column == 0:
+            result = results_read[row]
+        elif column == 1:
+            result = results_write[row]
+        else:
+            result = results_mix[row]
+        return tkinter.Label(
+            parent,
+            text = f"{result:.2f}",
+            font = (font, 32),
+            fg = foreground,
+            bg = background
+        )
+
     # Main Frame - Row 1
 
     frame_row_1 = tkinter.Frame(
