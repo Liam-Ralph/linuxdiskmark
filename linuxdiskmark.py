@@ -227,15 +227,21 @@ def open_window_home(open_settings = False):
     # Main Frame Widget Functions
 
     def create_row(parent, half_size = False):
-        return tkinter.Frame(
+        frame = tkinter.Frame(
             parent,
             width = window_width,
             height = 50 if not half_size else 25,
             bg = background
         )
+        frame.pack_propagate(False)
+        frame.pack(
+            padx = 5,
+            pady = 1
+        )
+        return frame
 
     def create_test_button(parent, text, benchmark):
-        return tkinter.Button(
+        button = tkinter.Button(
             parent,
             text = text,
             font = (font, 12),
@@ -246,9 +252,13 @@ def open_window_home(open_settings = False):
             activebackground = shift_color(highlight, True),
             command = lambda: run_benchmark(benchmark)
         )
+        button.pack(
+            side = tkinter.LEFT
+        )
+        return button
 
     def create_result_frame(parent):
-        return tkinter.Frame(
+        frame = tkinter.Frame(
             parent,
             width = 180,
             height = 48,
@@ -256,6 +266,11 @@ def open_window_home(open_settings = False):
             relief = tkinter.SOLID,
             bg = background
         )
+        frame.pack_propagate(False)
+        frame.pack(
+            side = tkinter.LEFT
+        )
+        return frame
 
     def create_result_label(parent, text, row, column):
         if column == 0:
@@ -264,13 +279,17 @@ def open_window_home(open_settings = False):
             result = results_write[row]
         else:
             result = results_mix[row]
-        return tkinter.Label(
+        label = tkinter.Label(
             parent,
             text = f"{result:.2f}",
             font = (font, 32),
             fg = foreground,
             bg = background
         )
+        label.pack(
+            side = tkinter.RIGHT
+        )
+        return label
 
     # Main Frame - Row 1
 
