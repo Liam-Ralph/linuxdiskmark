@@ -62,6 +62,7 @@ RW_NAMES = ["Read", "Write", "Mix"]
 class Test:
     def __init__(self, random, block_size, queues, threads, units):
         self.random = random
+        self.random_str = "RND" if random else "SEQ"
         self.block_size = block_size
         self.queues = queues
         self.threads = threads
@@ -393,7 +394,7 @@ def open_window_home(open_settings = False):
         tkinter.Label(
             frame_row_1_2,
             text = (
-                f"{"RND" if demo_test.random else "SEQ"} {demo_test.block_size}, " +
+                f"{demo_test.random_str} {demo_test.block_size}, " +
                 f"Q={demo_test.queues}, T={demo_test.threads}" # e.g. SEQ 1MiB, Q=8, T=1
             ),
             font = (font, 12),
@@ -412,13 +413,13 @@ def open_window_home(open_settings = False):
 
             frame_row = create_row(frame_main)
             text = (
-                ("RND" if test.random else "SEQ") + test.block_size.replace("iB", "") + "\n" +
+                (test.random_str) + test.block_size.replace("iB", "") + "\n" +
                 f"Q{test.queues}T{test.threads}"
             )
             create_test_button(frame_row, text, test_num)
 
             for col in range(3 if mix else 2):
-            
+
                 frame_col = tkinter.Frame(
                     frame_row,
                     width = 180,
@@ -435,8 +436,8 @@ def open_window_home(open_settings = False):
 
                 result_label = tkinter.Label(
                     frame_col,
-                    text = f"{results[col][test_num]:.2f}",
-                    font = (font, 32),
+                    text = f"{round_pad(results[col][test_num][unit], 2)}",
+                    font = (font, 28),
                     bg = background,
                     fg = foreground
                 )
@@ -494,7 +495,7 @@ def open_window_home(open_settings = False):
 
             label_result = tkinter.Label(
                 frame_result,
-                text = f"{results[col][0]:.2f}",
+                text = f"{round_pad(results[col][0][unit], 2)}",
                 font = (font, 32),
                 height = 4,
                 bg = background,
@@ -627,15 +628,13 @@ def listen_for_commands():
     keyboard.add_hotkey("ctrl+s", save_image)
     keyboard.add_hotkey("alt+f4", exit_program)
 
-def copy_text():
+def get_result_text():
 
-    # Result Variables
+    # Result Variable
 
-    global results_read
-    global results_write
-    global results_mix
+    global results
 
-    # Text Formatting
+    # Header and Units
 
     text = (
         "-" * 78 + "\n" +
@@ -646,38 +645,56 @@ def copy_text():
         "* KB = 1000 bytes, KiB = 1024 bytes\n\n"
     )
 
-    if results_read is not None:
-        text += (
-            "[Read]\n" +
-            "\n"
+    # Results
+
+    results_text = ["[Read]\n", "[Write]\n"]
+    if mix:
+        results_text.append("[Mix]\n")
+
+    for test_num in range(4 if profile != "demo" else 1):
+
+        test = profiles[hardware][profile][test_num]
+        test_text = (
+            f"  {test.random_str} {test.block_size.rjust(7)} " +
+            f"(Q={str(test.queues).rjust(3)}, T={str(test.threads).rjust(2)}): "
         )
 
-    if results_write is not None:
-        text += (
-            "[Write]\n" +
-            "\n"
-        )
+        for i in range(3 if mix else 2):
 
-    if results_mix is not None:
-        text += (
-            "[Mixed]\n" +
-            "\n"
-        )
+            test_results = results[i][test_num]
+            results_text[i] += (
+                test_text +
+                f"{round_pad(test_results['MB/s'], 3).rjust(9)} MB/s " +
+                f"[{round_pad(test_results['IOPS'], 1).rjust(9)} IOPS] " +
+                f"<{round_pad(test_results['us'], 2).rjust(9)} us>\n"
+            )
+
+    for i in range(3 if mix else 2):
+        text += results_text[i] + "\n"
+
+    # Settings and User Info
 
     text += (
-        "Profile: " + profile + "\n"
-        "   Test: " + f"{test_size} (x{test_count}) [{test_path}]\n" +
-        "   Date: " + datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S") + "\n"
+        f"Profile: {profile}\n" +
+        f"   Test: {test_size} (x{test_count}) [{test_path}]\n" +
+        f"   Time: Measure {profiles[hardware]["measure_time"]} sec / " +
+        f"Interval {profiles[hardware]["interval_time"]} sec\n"
+        f"   Date: {datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")}\n"
     )
 
+    os = "Linux"
     with open("/etc/os-release") as file:
         file_line = file.readline()
         while ("PRETTY_NAME=\"" not in file_line):
             file_line = file.readline()
-        text += (
-            "     OS: " + file_line.replace("PRETTY_NAME=\"", "").replace("\"\n", "") +
-            f" [Kernel: {platform.release()}]\n"
-        )
+        os = file_line.replace("PRETTY_NAME=\"", "").replace("\"\n", "")
+    text += f"     OS: {os} [Kernel: {platform.release()}] ({platform.architecture()[0]})\n"
+
+    return text
+
+def copy_text():
+
+    text = get_result_text()
 
     # Copying to Clipboard
 
@@ -725,6 +742,9 @@ def shift_color(color, lighten, amount = 30):
         b = max(0, b - amount)
 
     return f"#{r:02x}{g:02x}{b:02x}"
+
+def round_pad(num, digits):
+    return f"{round(num, digits):.{digits}f}"
 
 
 # Main Function
@@ -832,19 +852,25 @@ def main():
             "default": [],
             "peak_performance": [],
             "real_world_performance": [],
-            "demo": []
+            "demo": [],
+            "measure_time": 0,
+            "interval_time": 0
         },
         "nvme_ssd": {
             "default": [],
             "peak_performance": [],
             "real_world_performance": [],
-            "demo": []
+            "demo": [],
+            "measure_time": 0,
+            "interval_time": 0
         },
         "flash_memory": {
             "default": [],
             "peak_performance": [],
             "real_world_performance": [],
-            "demo": []
+            "demo": [],
+            "measure_time": 0,
+            "interval_time": 0
         }
     }
 
@@ -865,13 +891,30 @@ def main():
                         test["unit"]
                     )
                 )
+        profiles[hardware_names[i]]["measure_time"] = tests_raw["measure_time"]
+        profiles[hardware_names[i]]["interval_time"] = tests_raw["interval_time"]
 
     # Results
 
     results = [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
+        [
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0}
+        ],
+        [
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0}
+        ],
+        [
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0},
+            {"MB/s": 0, "IOPS": 0, "us": 0}
+        ]
     ]
     result_labels = [[], [], []]
 
