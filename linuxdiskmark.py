@@ -106,14 +106,8 @@ def open_window_home(open_settings = False):
 
     # Result Variables
 
-    global results_read
-    global results_read_labels
-
-    global results_write
-    global results_write_labels
-
-    global results_mix
-    global results_mix_labels
+    global results
+    global results_labels
 
     # Global Buttons
 
@@ -264,7 +258,6 @@ def open_window_home(open_settings = False):
         button.pack(
             side = tkinter.LEFT
         )
-        return button
 
     # Main Frame - Row 1
 
@@ -412,7 +405,14 @@ def open_window_home(open_settings = False):
 
     if profile != "demo":
 
-        pass
+        for row_num in [2, 3, 4, 5]:
+
+            i = row_num - 2
+
+            test = profiles[hardware][profile][i]
+
+            frame_row = create_row(frame_main)
+            create_test_button(frame_row) # finish this
 
     else:
 
@@ -448,7 +448,7 @@ def open_window_home(open_settings = False):
 
             label_nw = tkinter.Label(
                 frame_result,
-                text = "Read" if i == 0 else "Write",
+                text = RW_NAMES[i],
                 font = (font, 12),
                 width = 6 if i == 0 else 7,
                 height = 2,
@@ -463,13 +463,16 @@ def open_window_home(open_settings = False):
 
             label_result = tkinter.Label(
                 frame_result,
-                text = f"{results_read[i] if i == 0 else results_write[i]:.2f}",
+                text = f"{results[i][0]:.2f}",
                 font = (font, 32),
                 height = 4,
                 bg = background,
                 fg = foreground
             )
-            # finish this
+            label_result.pack(
+                anchor = tkinter.CENTER
+            )
+            results_labels[i].append(label_result)
 
             label_se = tkinter.Label(
                 frame_result,
@@ -485,122 +488,6 @@ def open_window_home(open_settings = False):
                 rely = 0,
                 anchor = tkinter.SE
             )
-
-        frame_row_2_col_1 = tkinter.Frame(
-            frame_row_2,
-            width = window_width / 2,
-            height = 200,
-            bd = 1,
-            relief = tkinter.SOLID,
-            bg = background
-        )
-        frame_row_2_col_1.pack_propagate(False)
-        frame_row_2_col_1.pack(
-            side = tkinter.LEFT,
-            padx = 3
-        )
-
-        col_1_nw = tkinter.Label(
-            frame_row_2_col_1,
-            text = "Read",
-            font = (font, 12),
-            width = 6,
-            height = 2,
-            bg = background,
-            fg = foreground
-        )
-        col_1_nw.place(
-            relx = 0,
-            rely = 0,
-            anchor = tkinter.NW
-        )
-
-        results_labels[0].append(
-            tkinter.Label(
-                frame_row_2_col_1,
-                text = f"{results_read[0]:.2f}",
-                font = (font, 32),
-                height = 4,
-                bg = background,
-                fg = foreground
-            )
-        )
-        results_labels[0][0].pack(
-            anchor = tkinter.CENTER
-        )
-
-        col_1_se = tkinter.Label(
-            frame_row_2_col_1,
-            text = unit,
-            font = (font, 12),
-            width = len(unit) + 2,
-            height = 2,
-            bg = background,
-            fg = foreground
-        )
-        col_1_se.place(
-            relx = 1,
-            rely = 1,
-            anchor = tkinter.SE
-        )
-
-        frame_row_2_col_2 = tkinter.Frame(
-            frame_row_2,
-            width = window_width / 2,
-            height = 200,
-            bd = 1,
-            relief = tkinter.SOLID,
-            bg = background
-        )
-        frame_row_2_col_2.pack_propagate(False)
-        frame_row_2_col_2.pack(
-            side = tkinter.LEFT,
-            padx = 3
-        )
-
-        col_1_nw = tkinter.Label(
-            frame_row_2_col_2,
-            text = "Write",
-            font = (font, 12),
-            width = 7,
-            height = 2,
-            bg = background,
-            fg = foreground
-        )
-        col_1_nw.place(
-            relx = 0,
-            rely = 0,
-            anchor = tkinter.NW
-        )
-
-        results_labels[0].append(
-            tkinter.Label(
-                frame_row_2_col_2,
-                text = f"{results_write[0]:.2f}",
-                font = (font, 32),
-                height = 4,
-                bg = background,
-                fg = foreground
-            )
-        )
-        results_labels[0][1].pack(
-            anchor = tkinter.CENTER
-        )
-
-        col_1_se = tkinter.Label(
-            frame_row_2_col_2,
-            text = unit,
-            font = (font, 12),
-            width = len(unit) + 2,
-            height = 2,
-            bg = background,
-            fg = foreground
-        )
-        col_1_se.place(
-            relx = 1,
-            rely = 1,
-            anchor = tkinter.SE
-        )
 
     # Footer Frame
 
@@ -846,14 +733,8 @@ def main():
 
     # Result Variables
 
-    global results_read
-    global resutls_read_labels
-
-    global results_write
-    global results_write_labels
-
-    global results_mix
-    global results_mix_labels
+    global results
+    global results_labels
 
     # Exit Flag
 
@@ -955,18 +836,12 @@ def main():
 
     # Results
 
-    results_read = [0, 0, 0, 0]
-    results_read_labels = []
-
-    results_write = [0, 0, 0, 0]
-    results_write_labels = []
-
-    if mix:
-        results_mix = [0, 0, 0, 0]
-        results_mix_labels = []
-    else:
-        results_mix = None
-        results_mix_labels = None
+    results = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ]
+    results_labels = [[], [], []]
 
     # Process Title
 
