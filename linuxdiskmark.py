@@ -52,6 +52,11 @@ PATH_LOGO = "/usr/share/linuxdiskmark/logo.png"
 PATH_DOC = "/usr/share/doc/linuxdiskmark/"
 
 
+# Other Constants
+
+RW_NAMES = ["Read", "Write", "Mix"]
+
+
 # Classes
 
 class Test:
@@ -102,9 +107,13 @@ def open_window_home(open_settings = False):
     # Result Variables
 
     global results_read
+    global results_read_labels
+
     global results_write
+    global results_write_labels
+
     global results_mix
-    global results_labels
+    global results_mix_labels
 
     # Global Buttons
 
@@ -257,93 +266,14 @@ def open_window_home(open_settings = False):
         )
         return button
 
-    def create_result_frame(parent):
-        frame = tkinter.Frame(
-            parent,
-            width = 180,
-            height = 48,
-            bd = 1,
-            relief = tkinter.SOLID,
-            bg = background
-        )
-        frame.pack_propagate(False)
-        frame.pack(
-            side = tkinter.LEFT
-        )
-        return frame
-
-    def create_result_label(parent, text, row, column):
-        if column == 0:
-            result = results_read[row]
-        elif column == 1:
-            result = results_write[row]
-        else:
-            result = results_mix[row]
-        label = tkinter.Label(
-            parent,
-            text = f"{result:.2f}",
-            font = (font, 32),
-            fg = foreground,
-            bg = background
-        )
-        label.pack(
-            side = tkinter.RIGHT
-        )
-        return label
-
     # Main Frame - Row 1
 
-    frame_row_1 = tkinter.Frame(
-        frame_main,
-        width = window_width,
-        height = 50,
-        bg = background
-    )
-    frame_row_1.pack_propagate(False)
-    frame_row_1.pack(
-        padx = 5,
-        pady = 1
-    )
-
-    tkinter.Button(
-        frame_row_1,
-        text = "All",
-        font = (font, 12),
-        width = 5,
-        height = 4,
-        fg = foreground,
-        bg = highlight,
-        activebackground = shift_color(highlight, True),
-        command = lambda: run_benchmark(0)
-    ).pack(
-        side = tkinter.LEFT
-    )
-
-    frame_row_1_1 = tkinter.Frame(
-        frame_row_1,
-        width = window_width,
-        height = 25,
-        bg = background
-    )
-    frame_row_1_1.pack_propagate(False)
-    frame_row_1_1.pack(
-        side = tkinter.TOP,
-        padx = 1
-    )
-
-    frame_row_1_2 = tkinter.Frame(
-        frame_row_1,
-        width = window_width,
-        height = 25,
-        bg = background
-    )
-    frame_row_1_2.pack_propagate(False)
-    frame_row_1_2.pack(
-        side = tkinter.TOP,
-        padx = 1
-    )
+    frame_row_1 = create_row(frame_main)
+    create_test_button(frame_row_1, "All", 0)
 
     # Main Frame - Row 1-1
+
+    frame_row_1_1 = create_row(frame_row_1, True)
 
     test_count_var = tkinter.IntVar(value = test_count)
     test_count_options = list(range(1, 10))
@@ -435,89 +365,35 @@ def open_window_home(open_settings = False):
         padx = 1
     )
 
+    # Main Frame - Row 1-2
+
+    frame_row_1_2 = create_row(frame_row_1, True)
+
     if profile != "demo":
 
-        # Main Frame - Row 1-2
+        for i in range(3 if mix else 2):
 
-        frame_row_1_2_col_1 = tkinter.Frame(
-            frame_row_1_2,
-            width = 180,
-            height = 25,
-            bg = background
-        )
-        frame_row_1_2_col_1.pack_propagate(False)
-        frame_row_1_2_col_1.pack(
-            side = tkinter.LEFT,
-            padx = 1
-        )
-
-        frame_row_1_2_col_2 = tkinter.Frame(
-            frame_row_1_2,
-            width = 180,
-            height = 25,
-            bg = background
-        )
-        frame_row_1_2_col_2.pack_propagate(False)
-        frame_row_1_2_col_2.pack(
-            side = tkinter.LEFT,
-            padx = 1
-        )
-
-        tkinter.Label(
-            frame_row_1_2_col_1,
-            text = f"Read ({unit})",
-            font = (font, 12),
-            bg = background,
-            fg = foreground
-        ).pack()
-
-        tkinter.Label(
-            frame_row_1_2_col_2,
-            text = f"Write ({unit})",
-            font = (font, 12),
-            bg = background,
-            fg = foreground
-        ).pack()
-
-        if mix:
-
-            frame_row_1_2_col_3 = tkinter.Frame(
+            frame = tkinter.Frame(
                 frame_row_1_2,
                 width = 180,
                 height = 25,
                 bg = background
             )
-            frame_row_1_2_col_3.pack_propagate(False)
-            frame_row_1_2_col_3.pack(
+            frame.pack_propagate(False)
+            frame.pack(
                 side = tkinter.LEFT,
                 padx = 1
             )
 
             tkinter.Label(
-                frame_row_1_2_col_3,
-                text = f"Mix ({unit})",
+                frame,
+                text = f"{RW_NAMES[i]} ({unit})",
                 font = (font, 12),
                 bg = background,
                 fg = foreground
             ).pack()
 
     else:
-
-        # Main Frame
-
-        frame_row_2 = tkinter.Frame(
-            frame_main,
-            width = window_width,
-            height = 200,
-            bg = background
-        )
-        frame_row_2.pack_propagate(False)
-        frame_row_2.pack(
-            padx = 5,
-            pady = 1
-        )
-
-        # Main Frame - Row 1-2
 
         demo_test = profiles[hardware][profile][0]
 
@@ -532,7 +408,83 @@ def open_window_home(open_settings = False):
             fg = foreground
         ).pack()
 
+    # Main Frame - Row 2+
+
+    if profile != "demo":
+
+        pass
+
+    else:
+
         # Main Frame - Row 2
+
+        frame_row_2 = tkinter.Frame(
+            frame_main,
+            width = window_width,
+            height = 200,
+            bg = background
+        )
+        frame_row_2.pack_propagate(False)
+        frame_row_2.pack(
+            padx = 5,
+            pady = 1
+        )
+
+        for i in range(2):
+
+            frame_result = tkinter.Frame(
+                frame_row_2,
+                width = window_width / 2,
+                height = 200,
+                bd = 1,
+                relief = tkinter.SOLID,
+                bg = background
+            )
+            frame_result.pack_propagate(False)
+            frame_result.pack(
+                side = tkinter.LEFT,
+                padx = 3
+            )
+
+            label_nw = tkinter.Label(
+                frame_result,
+                text = "Read" if i == 0 else "Write",
+                font = (font, 12),
+                width = 6 if i == 0 else 7,
+                height = 2,
+                bg = background,
+                fg = foreground
+            )
+            label_nw.place(
+                relx = 0,
+                rely = 0,
+                anchor = tkinter.NW
+            )
+
+            label_result = tkinter.Label(
+                frame_result,
+                text = f"{results_read[i] if i == 0 else results_write[i]:.2f}",
+                font = (font, 32),
+                height = 4,
+                bg = background,
+                fg = foreground
+            )
+            # finish this
+
+            label_se = tkinter.Label(
+                frame_result,
+                text = unit,
+                font = (font, 12),
+                width = len(unit) + 2,
+                height = 2,
+                bg = background,
+                fg = foreground
+            )
+            label_se.place(
+                relx = 1,
+                rely = 0,
+                anchor = tkinter.SE
+            )
 
         frame_row_2_col_1 = tkinter.Frame(
             frame_row_2,
@@ -895,9 +847,13 @@ def main():
     # Result Variables
 
     global results_read
+    global resutls_read_labels
+
     global results_write
+    global results_write_labels
+
     global results_mix
-    global results_labels
+    global results_mix_labels
 
     # Exit Flag
 
@@ -1000,18 +956,17 @@ def main():
     # Results
 
     results_read = [0, 0, 0, 0]
+    results_read_labels = []
+
     results_write = [0, 0, 0, 0]
+    results_write_labels = []
 
     if mix:
         results_mix = [0, 0, 0, 0]
+        results_mix_labels = []
     else:
         results_mix = None
-        results_labels = [[], []]
-
-    if profile != "demo":
-        results_labels = [[], [], [], []]
-    else:
-        results_labels = [[]]
+        results_mix_labels = None
 
     # Process Title
 
