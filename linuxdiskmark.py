@@ -60,12 +60,12 @@ RW_NAMES = ["Read", "Write", "Mix"]
 # Classes
 
 class Test:
-    def __init__(self, type, random, block_size, queues, threads):
-        self.type = type
+    def __init__(self, random, block_size, queues, threads, units):
         self.random = random
         self.block_size = block_size
         self.queues = queues
         self.threads = threads
+        self.units = units
 
 
 # Home Window Functions
@@ -107,7 +107,7 @@ def open_window_home(open_settings = False):
     # Result Variables
 
     global results
-    global results_labels
+    global result_labels
 
     # Global Buttons
 
@@ -262,7 +262,7 @@ def open_window_home(open_settings = False):
     # Main Frame - Row 1
 
     frame_row_1 = create_row(frame_main)
-    create_test_button(frame_row_1, "All", 0)
+    create_test_button(frame_row_1, "All", 4)
 
     # Main Frame - Row 1-1
 
@@ -364,7 +364,7 @@ def open_window_home(open_settings = False):
 
     if profile != "demo":
 
-        for i in range(3 if mix else 2):
+        for col in range(3 if mix else 2):
 
             frame = tkinter.Frame(
                 frame_row_1_2,
@@ -380,7 +380,7 @@ def open_window_home(open_settings = False):
 
             tkinter.Label(
                 frame,
-                text = f"{RW_NAMES[i]} ({unit})",
+                text = f"{RW_NAMES[col]} ({unit})",
                 font = (font, 12),
                 bg = background,
                 fg = foreground
@@ -407,12 +407,43 @@ def open_window_home(open_settings = False):
 
         for row_num in [2, 3, 4, 5]:
 
-            i = row_num - 2
-
-            test = profiles[hardware][profile][i]
+            test_num = row_num - 2
+            test = profiles[hardware][profile][test_num]
 
             frame_row = create_row(frame_main)
-            create_test_button(frame_row) # finish this
+            text = (
+                ("RND" if test.random else "SEQ") + test.block_size.replace("iB", "") + "\n" +
+                f"Q{test.queues}T{test.threads}"
+            )
+            create_test_button(frame_row, text, test_num)
+
+            for col in range(3 if mix else 2):
+            
+                frame_col = tkinter.Frame(
+                    frame_row,
+                    width = 180,
+                    height = 48,
+                    bd = 1,
+                    relief = tkinter.SOLID,
+                    bg = background
+                )
+                frame_col.pack_propagate(False)
+                frame_col.pack(
+                    side = tkinter.LEFT,
+                    padx = 1
+                )
+
+                result_label = tkinter.Label(
+                    frame_col,
+                    text = f"{results[col][test_num]:.2f}",
+                    font = (font, 32),
+                    bg = background,
+                    fg = foreground
+                )
+                result_label.pack(
+                    side = tkinter.RIGHT
+                )
+                result_labels[col].append(result_label)
 
     else:
 
@@ -430,7 +461,7 @@ def open_window_home(open_settings = False):
             pady = 1
         )
 
-        for i in range(2):
+        for col in range(2):
 
             frame_result = tkinter.Frame(
                 frame_row_2,
@@ -448,9 +479,9 @@ def open_window_home(open_settings = False):
 
             label_nw = tkinter.Label(
                 frame_result,
-                text = RW_NAMES[i],
+                text = RW_NAMES[col],
                 font = (font, 12),
-                width = 6 if i == 0 else 7,
+                width = len(RW_NAMES[col]) + 2,
                 height = 2,
                 bg = background,
                 fg = foreground
@@ -463,7 +494,7 @@ def open_window_home(open_settings = False):
 
             label_result = tkinter.Label(
                 frame_result,
-                text = f"{results[i][0]:.2f}",
+                text = f"{results[col][0]:.2f}",
                 font = (font, 32),
                 height = 4,
                 bg = background,
@@ -472,7 +503,7 @@ def open_window_home(open_settings = False):
             label_result.pack(
                 anchor = tkinter.CENTER
             )
-            results_labels[i].append(label_result)
+            result_labels[col].append(label_result)
 
             label_se = tkinter.Label(
                 frame_result,
@@ -485,7 +516,7 @@ def open_window_home(open_settings = False):
             )
             label_se.place(
                 relx = 1,
-                rely = 0,
+                rely = 1,
                 anchor = tkinter.SE
             )
 
@@ -534,6 +565,7 @@ def check_exit_flag():
 
 def run_benchmark(benchmark_num):
 
+    # 0-3 are a num, 4 is all
     pass
 
 # Info Window Functions
@@ -734,7 +766,7 @@ def main():
     # Result Variables
 
     global results
-    global results_labels
+    global result_labels
 
     # Exit Flag
 
@@ -826,11 +858,11 @@ def main():
             for test in tests.values():
                 profiles[hardware_names[i]][profile_names[ii]].append(
                     Test(
-                        test["type"],
                         test["random"],
                         test["block_size"],
                         test["queues"],
-                        test["threads"]
+                        test["threads"],
+                        test["unit"]
                     )
                 )
 
@@ -841,7 +873,7 @@ def main():
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ]
-    results_labels = [[], [], []]
+    result_labels = [[], [], []]
 
     # Process Title
 
