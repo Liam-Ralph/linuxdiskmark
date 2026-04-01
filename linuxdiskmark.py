@@ -73,7 +73,7 @@ class Test:
 
 # Home Window Functions
 
-def open_window_home(open_settings = False):
+def open_window_home(open_window = None):
     """
     Open home/main window.
     """
@@ -202,31 +202,7 @@ def open_window_home(open_settings = False):
         side = tkinter.LEFT
     )
 
-    tkinter.Button(
-        frame_header,
-        text = "Settings",
-        font = (font, 10),
-        width = 9,
-        height = 1,
-        fg = foreground,
-        bg = background,
-        command = open_window_settings
-    ).pack(
-        side = tkinter.LEFT
-    )
-
-    tkinter.Button(
-        frame_header,
-        text = "Info",
-        font = (font, 10),
-        width = 6,
-        height = 1,
-        fg = foreground,
-        bg = background,
-        command = open_window_info
-    ).pack(
-        side = tkinter.LEFT
-    )
+    # add new OptionMenus here
 
     # Main Frame
 
@@ -555,8 +531,10 @@ def open_window_home(open_settings = False):
 
     # Open Settings Window
 
-    if open_settings:
-        open_window_settings()
+    if open_window == "profile":
+        open_window_profile_settings()
+    elif open_window == "font":
+        open_window_font_settings()
 
     # Window Mainloop
 
@@ -580,7 +558,11 @@ def run_benchmark(benchmark_num):
     # 0-3 are a num, 4 is all
     pass
 
-# Info Window Functions
+# Info Functions
+
+def open_web_info():
+
+    pass
 
 def open_window_info():
 
@@ -588,7 +570,11 @@ def open_window_info():
 
 # Settings Window Functions
 
-def open_window_settings():
+def open_window_profile_settings():
+
+    pass
+
+def open_window_font_settings():
 
     pass
 
@@ -638,6 +624,11 @@ def listen_for_commands():
     keyboard.add_hotkey("ctrl+t", save_text)
     keyboard.add_hotkey("ctrl+s", save_image)
     keyboard.add_hotkey("alt+f4", exit_program)
+
+    keyboard.add_hotkey("ctrl+q", open_window_profile_settings)
+    keyboard.add_hotkey("ctrl+f", open_window_font_settings)
+
+    keyboard.add_hotkey("f1", open_web_info)
 
 def get_result_text():
 
@@ -716,6 +707,19 @@ def copy_text():
     clipboard_tk.update()
     clipboard_tk.destroy()
 
+def fix_permissions(path):
+
+    sudo_user = os.environ.get("SUDO_USER")
+    if sudo_user:
+        pw = pwd.getpwnam(sudo_user)
+        uid, gid = pw.pw_uid, pw.pw_gid
+    else:
+        uid = os.getuid()
+        gid = os.getgid()
+
+    os.chown(path, uid, gid)
+    os.chmod(path, 0o644)
+
 def save_text():
 
     path = tkinter.filedialog.asksaveasfilename(
@@ -728,16 +732,7 @@ def save_text():
     with open(path, "w") as file:
         file.write(get_result_text())
 
-    sudo_user = os.environ.get("SUDO_USER")
-    if sudo_user:
-        pw = pwd.getpwnam(sudo_user)
-        uid, gid = pw.pw_uid, pw.pw_gid
-    else:
-        uid = os.getuid()
-        gid = os.getgid()
-
-    os.chown(path, uid, gid)
-    os.chmod(path, 0o644)
+    fix_permissions(path)
 
 def save_image():
 
@@ -754,6 +749,7 @@ def save_image():
     )
 
     def capture_window():
+
         ImageGrab.grab(
             bbox = (
                 window_home.winfo_rootx(),
@@ -763,16 +759,7 @@ def save_image():
             )
         ).save(path)
 
-        sudo_user = os.environ.get("SUDO_USER")
-        if sudo_user:
-            pw = pwd.getpwnam(sudo_user)
-            uid, gid = pw.pw_uid, pw.pw_gid
-        else:
-            uid = os.getuid()
-            gid = os.getgid()
-
-        os.chown(path, uid, gid)
-        os.chmod(path, 0o644)
+        fix_permissions(path)
 
     window_home.after(1000, capture_window)
 
