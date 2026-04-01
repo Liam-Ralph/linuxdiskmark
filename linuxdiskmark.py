@@ -40,6 +40,7 @@ import datetime
 import json
 import keyboard
 import threading
+import webbrowser
 
 
 # Paths
@@ -202,7 +203,7 @@ def open_window_home(open_window = None):
         side = tkinter.LEFT
     )
 
-    # add new OptionMenus here
+    # TODO: add new OptionMenus here
 
     # Main Frame
 
@@ -562,7 +563,8 @@ def run_benchmark(benchmark_num):
 
 def open_web_info():
 
-    pass
+    # TODO: fix this
+    webbrowser.open("https://liam-ralph.github.io/projects/linuxdiskmark")
 
 def open_window_info():
 
