@@ -23,12 +23,13 @@ import tkinter.filedialog
 from tkinter import colorchooser
 from tkinter import messagebox
 
-from PIL import Image, ImageTk
+from PIL import Image, ImageGrab, ImageTk
 
 # System
 
 import os
 import platform
+import pwd
 import setproctitle
 import subprocess
 import sys
@@ -43,14 +44,15 @@ import threading
 
 # Paths
 
-global PATH_DATA
-global PATH_LOGO
-global PATH_DOC
-
 PATH_DATA = "/usr/share/linuxdiskmark/data/"
 PATH_LOGO = "/usr/share/linuxdiskmark/logo.png"
 PATH_DOC = "/usr/share/doc/linuxdiskmark/"
 
+sudo_user = os.environ.get("SUDO_USER")
+if sudo_user:
+    PATH_HOME = pwd.getpwnam(sudo_user).pw_dir + "/"
+else:
+    PATH_HOME = pwd.getpwuid(os.getuid()).pw_dir + "/"
 
 # Other Constants
 
@@ -324,17 +326,26 @@ def open_window_home(open_settings = False):
     test_path_options = partition_names + ["Choose Folder"]
 
     def test_path_command(event):
+
         if test_path_var.get() in partition_names:
+
             partition_name = test_path_var.get()
             setting_value = partition_paths[partition_names.index(partition_name)]
             test_path_var.set(
                 partition_name if len(partition_name) <= 23 else partition_name[:20] + "..."
             )
+
         else:
-            setting_value = tkinter.filedialog.askdirectory(parent = window_home)
+
+            setting_value = tkinter.filedialog.askdirectory(
+                parent = window_home,
+                initialdir = "/",
+                mustexist = True
+            )
             test_path_var.set(
                 setting_value if len(setting_value) <= 23 else setting_value[-20:] + "..."
             )
+
         change_setting("test_path", setting_value)
 
     tkinter.OptionMenu(
@@ -707,11 +718,63 @@ def copy_text():
 
 def save_text():
 
-    pass
+    path = tkinter.filedialog.asksaveasfilename(
+        parent = window_home,
+        filetypes = [("Text Files", "*.txt")],
+        defaultextension = ".txt",
+        initialdir = PATH_HOME
+    )
+
+    with open(path, "w") as file:
+        file.write(get_result_text())
+
+    sudo_user = os.environ.get("SUDO_USER")
+    if sudo_user:
+        pw = pwd.getpwnam(sudo_user)
+        uid, gid = pw.pw_uid, pw.pw_gid
+    else:
+        uid = os.getuid()
+        gid = os.getgid()
+
+    os.chown(path, uid, gid)
+    os.chmod(path, 0o644)
 
 def save_image():
 
-    pass
+    global window_home
+
+    path = PATH_HOME + "Pictures"
+    if not os.path.exists(path):
+        path = PATH_HOME
+    path = tkinter.filedialog.asksaveasfilename(
+        parent = window_home,
+        filetypes = [("PNG Files", "*.png")],
+        defaultextension = ".png",
+        initialdir = path
+    )
+
+    def capture_window():
+        ImageGrab.grab(
+            bbox = (
+                window_home.winfo_rootx(),
+                window_home.winfo_rooty(),
+                window_home.winfo_rootx() + window_home.winfo_width(),
+                window_home.winfo_rooty() + window_home.winfo_height()
+            )
+        ).save(path)
+
+        sudo_user = os.environ.get("SUDO_USER")
+        if sudo_user:
+            pw = pwd.getpwnam(sudo_user)
+            uid, gid = pw.pw_uid, pw.pw_gid
+        else:
+            uid = os.getuid()
+            gid = os.getgid()
+
+        os.chown(path, uid, gid)
+        os.chmod(path, 0o644)
+
+    window_home.after(1000, capture_window)
 
 def exit_program():
 
