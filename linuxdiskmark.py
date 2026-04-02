@@ -564,7 +564,10 @@ def run_benchmark(benchmark_num):
 def open_web_info():
 
     # TODO: fix this
-    webbrowser.open("https://liam-ralph.github.io/projects/linuxdiskmark")
+    # webbrowser.open("https://liam-ralph.github.io/projects/linuxdiskmark")
+
+    usr = os.environ.get("SUDO_USER") or os.environ.get("USER")
+    subprocess.run(["sudo", "-u", usr, "xdg-open", "https://liam-ralph.github.io/projects/linuxdiskmark"])
 
 def open_window_info():
 
