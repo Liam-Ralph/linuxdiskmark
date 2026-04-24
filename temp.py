@@ -1,6 +1,6 @@
 import subprocess
 import os
-user = os.environ.get("SUDO_USER") # or os.environ.get("USER")
+user = os.environ.get("SUDO_USER") or os.environ.get("USER")
 
 result = subprocess.run(["sudo", "-u", user, "firefox", "--new-tab", "https://google.com"], capture_output = True, text = True)
 if result.returncode != 0:
