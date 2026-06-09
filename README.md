@@ -6,6 +6,7 @@
 <br/>
 
 ## Description
+
 LinuxDiskMark is a graphical disk benchmarking application
 designed to look and function like CrystalDiskMark on Windows.
 It uses `fio` to benchmark the disk under varios conditions
@@ -18,9 +19,11 @@ and displays the results.
 This project requires `fio`, which will be automatically installed.
 
 ### Memory
+
 This application uses approximately 256 KiB of memory.
 
 ### Storage
+
 This application uses approximately XY MiB of storage for the .deb package
 and approximately XY MiB of storage for the .rpm package. fio requires about
 2 MiB of storage.
