@@ -1,3 +1,3 @@
-## Version 1.0.0 (April 2026)
+## Version 1.0.0 (Cancelled)
 
 Initial app release.

@@ -1,3 +1,5 @@
+**This project has been abandoned. Check out KDiskMark for an alternative.**
+
 # LinuxDiskMark
 ### Released April 2026
 ### Version 1.0.0
